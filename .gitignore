@@ -45,5 +45,6 @@ package.json
 bower.json
 gulpfile.js
 .jshintrc
-site/*.js
-site/*.map
+site/app.js
+site/app.js.map
+typings/
