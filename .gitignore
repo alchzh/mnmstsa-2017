@@ -50,3 +50,4 @@ site/app.js.map
 typings/
 tasks.json
 .vscode/
+typings.json
