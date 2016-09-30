@@ -7,7 +7,8 @@
         "sourceMap": true
     },
     "include": [
-        "game/**/*"
+        "game/**/*",
+        "typings/index.d.ts"
     ],
     "exclude": [
         "node_modules",

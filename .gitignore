@@ -48,3 +48,5 @@ gulpfile.js
 site/app.js
 site/app.js.map
 typings/
+tasks.json
+.vscode/
