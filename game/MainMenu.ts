@@ -15,10 +15,6 @@ namespace TSAGame {
                 this.team.anchor.setTo(0.5);
             });
             this.input.onDown.addOnce(this.fadeOut, this);
-
-            //Debug
-            let line1 = new Phaser.Line(400, 0, 400, 600);
-            this.game.debug.geom(line1);
         }
 
         fadeOut() {
