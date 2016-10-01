@@ -1,7 +1,7 @@
-module TSAGame {
+namespace TSAGame {
     export class Boot extends Phaser.State {
         preload() {
-            this.load.image('preloadBar' , './assets/loader.png');
+            this.load.image("preloadBar", "./assets/loader.png");
         }
 
         create() {
@@ -10,7 +10,8 @@ module TSAGame {
 
             if (this.game.device.desktop) {
                 this.scale.pageAlignHorizontally = true;
-                this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                this.scale.pageAlignVertically = true;
+                // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             } else {
                 // mobile settings
                 this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -23,7 +24,7 @@ module TSAGame {
                 this.scale.refresh();
             }
 
-            this.game.state.start('Preloader', true, false);
+            this.game.state.start("Preloader", true, false);
         }
     }
 }
