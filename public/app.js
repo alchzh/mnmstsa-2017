@@ -77,8 +77,6 @@ var TSAGame;
                 _this.team.anchor.setTo(0.5);
             });
             this.input.onDown.addOnce(this.fadeOut, this);
-            var line1 = new Phaser.Line(400, 0, 400, 600);
-            this.game.debug.geom(line1);
         };
         MainMenu.prototype.fadeOut = function () {
             var _this = this;
