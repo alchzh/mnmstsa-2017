@@ -15,13 +15,10 @@ namespace TSAGame {
         }
 
         create() {
-            let tween = this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000,
-                Phaser.Easing.Linear.None, true);
-            tween.onComplete.add(this.startMainMenu, this);
-        }
-
-        startMainMenu() {
-            this.game.state.start("MainMenu", true, false);
+            this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000,
+                Phaser.Easing.Linear.None, true).onComplete.add(
+                    () => this.game.state.start("MainMenu", true, false)
+                );
         }
     }
 }
