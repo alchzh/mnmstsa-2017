@@ -20,7 +20,7 @@ namespace TSAGame {
 
         fadeOut() {
             this.add.tween(this.team).to({ y: 628 }, 1000, Phaser.Easing.Bounce.Out, true);
-            this.add.tween(this.logo).to({ y: 800 }, 2000, Phaser.Easing.Bounce.Out, true).onComplete.add(() => {
+            this.add.tween(this.logo).to({ y: this.logo.height / 2 }, 2000, Phaser.Easing.Bounce.Out, true).onComplete.add(() => {
                 this.game.state.start("Level1", true, false);
             });
         }
