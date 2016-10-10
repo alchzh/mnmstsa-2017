@@ -17,7 +17,7 @@ namespace TSAGame {
         create() {
             this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000,
                 Phaser.Easing.Linear.None, true).onComplete.add(
-                    () => this.game.state.start("MainMenu", true, false)
+                    () => this.game.state.start("Credits", true, false)
                 );
         }
     }

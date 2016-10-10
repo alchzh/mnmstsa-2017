@@ -1,6 +1,6 @@
 /// <reference path="./Boot.ts"/>
 /// <reference path="./Preloader.ts"/>
-/// <reference path="./MainMenu.ts" />
+/// <reference path="./Credits.ts" />
 
 namespace TSAGame {
     export class Game extends Phaser.Game {
@@ -8,7 +8,7 @@ namespace TSAGame {
             super(800, 600, Phaser.AUTO, "");
             this.state.add("Boot", Boot, false);
             this.state.add("Preloader", Preloader, false);
-            this.state.add("MainMenu", MainMenu, false);
+            this.state.add("Credits", Credits, false);
             this.state.start("Boot");
         }
     }
