@@ -1,7 +1,6 @@
 namespace TSAGame {
 
     export class Credits extends Phaser.State {
-
         logo: Phaser.Sprite;
         team: Phaser.Sprite;
 
@@ -20,9 +19,8 @@ namespace TSAGame {
         fadeOut() {
             this.add.tween(this.team).to({ y: 628 }, 1000, Phaser.Easing.Bounce.Out, true);
             this.add.tween(this.logo).to({ y: this.logo.height / 2 + 600 }, 2000, Phaser.Easing.Bounce.Out, true).onComplete.add(() => {
-                //this.game.state.start("Level1", true, false);
+//                this.game.state.start("Level1", true, false);
                 this.game.state.start("PlayerState", true, false);
-    
             });
         }
     }
