@@ -21,30 +21,39 @@ namespace TSAGame {
             this.alive=false;
      //       this.outOfCameraBoundsKill =true;
             
-        }update(){
+        }
+        
+        update(){
            // this.game.debug.body(this);
-            if(this.game.physics.arcade.collide(this.layer, this)){
+            if(this.game.physics.arcade.overlap(this.layer, this)){
                 this.kill(); 
                 this.body.enable=false;
                 this.exists=false;
                 this.autoCull =false;
-
             }
-            else if(this.game.physics.arcade.collide(this.player, this)){
-                console.log("KILL");
-                this.player.health-=50;
-            }
-            if(this.alive==false)this.exists=false;
+       //     else if(this.game.physics.arcade.collide(this, this.player)){
+        //        console.log("KILL");
+         //       this.player.health-=50;
+          //  }
+            if(this.alive === false)this.exists=false;
         }
-        addIn(x:number,y:number){
+        update2(player:Phaser.Sprite){
+            // console.log("hi");
+       //     if(this.game.physics.arcade.collide(player, this)){
+        //        console.log("KILL");
+         //       player.health-=50;
+          //  }
+        }
+        addIn(x:number,y:number,xVelMultiplier:number,yVelMultiplier:number,rotation:number){
             this.reset(x, y);
                         
-            this.game.add.existing(this);
             this.game.physics.arcade.enable(this);
             this.autoCull =true;
-            
-            this.body.velocity.y=650;
-    
+            console.log(x, y);
+            this.rotation=rotation*Math.PI/2+1.57;
+            this.body.velocity.y=650*yVelMultiplier;
+            this.body.velocity.x=550*xVelMultiplier;
+
         }
     }
 }

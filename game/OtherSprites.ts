@@ -10,23 +10,25 @@ namespace TSAGame {
         glass:any;
         moving:boolean;
         pauseMovement:boolean;
+        reverse:boolean
         prevPM:number;
         playerX:number;
         playerY:number;
         Obots:any;
         sound:Phaser.Sound;
         
-        constructor(game:Phaser.Game,x:number,y:number,y2:number,group:any,scale:number) {
-            super(game,x,y,"elevator");
+        constructor(game:Phaser.Game,x:number,y:number,y2:number,group:any,scale:number,type:string) {
+            super(game,x,y,type);
             
             this.y2 = y2;
             this.y1 = y;
             this.glass = this.addChild((game.make.sprite(46, 0, 'Laser')));
-            this.glass.scale.x = 2.75   ;
+            this.glass.scale.x = 2.75;
             this.glass.scale.y = 6.4444;
             game.add.existing(this);
             this.moving = false;    
             this.pauseMovement=false;
+            this.reverse=(y-y2>0);
             game.physics.arcade.enableBody(this);
             game.physics.arcade.enableBody(this.glass);
             if(scale===-1)this.animations.frame=1;
@@ -56,7 +58,7 @@ namespace TSAGame {
                  x=true;
             }
             }
-            if(x && this.game.input.keyboard.isDown(Phaser.Keyboard.X) &&  (!this.moving||this.prevPM>50)){
+            if(x && this.game.input.keyboard.isDown(Phaser.Keyboard.Z) &&  (!this.moving||this.prevPM>50)){
                 this.move();
             }
             var obotA=this.Obots.children;
@@ -99,15 +101,32 @@ namespace TSAGame {
                     this.body.velocity.y=-120;
                 }
             }
-            if (this.body.velocity.y == 120 && !(this.y < this.y2)) {
-                this.body.velocity.y = 0;
-                this.y = this.y2;
-                this.moving = false;
-            }
-            else if (this.body.velocity.y== -120 && this.y <= this.y1) {
-                this.body.velocity.y = 0;
-                this.y = this.y1;
-                this.moving = false;
+            console.log(this.reverse);
+
+            if(!this.reverse){
+                if (this.body.velocity.y == 120 && !(this.y < this.y2)) {
+                    this.body.velocity.y = 0;
+                    this.y = this.y2;
+                    this.moving = false;
+                }
+                else if (this.body.velocity.y== -120 && this.y <= this.y1) {
+                    this.body.velocity.y = 0;
+                    this.y = this.y1;
+                    this.moving = false;
+                }
+            }else{
+                if (this.body.velocity.y == -120 && !(this.y > this.y2)) {
+                    this.body.velocity.y = 0;
+                    this.y = this.y2;
+                    console.log("f");
+                    this.moving = false;
+                }
+                else if (this.body.velocity.y== 120 && this.y >= this.y1) {
+                    this.body.velocity.y = 0;
+                    this.y = this.y1;
+                    console.log("u");
+                    this.moving = false;
+                }
             }
 /*            else if ((this.body.velocity.y == 120 && !(this.y < this.y2) || (this.body.velocity.y == -120 && this.y <= this.y1)) {
                 this.body.velocity.y = 0;   
@@ -127,33 +146,52 @@ namespace TSAGame {
         move() {
             this.moving = true;
             this.sound.play();
-            if (this.y == this.y2||this.prevPM>50) {
-                this.prevPM=0;
-                this.pauseMovement=false;
-                this.direction=1;
-                this.body.velocity.y = -120;
-            }
-            else {
-                this.direction=-1;
-                this.body.velocity.y = 120;
+            if(!this.reverse){
+                if (this.y == this.y2||this.prevPM>50) {
+                    this.prevPM=0;
+                    this.pauseMovement=false;
+                    this.direction=1;
+                    this.body.velocity.y = -120;
+                }
+                else {
+                    this.direction=-1;
+                    this.body.velocity.y = 120;
+                }
+            }else{
+                if (this.y != this.y2) {
+                   
+                    this.pauseMovement=false;
+                    this.direction=1;
+                    this.body.velocity.y = -120;
+                    console.log("happiness");
+                }
+                else {
+                    
+                     this.prevPM=0;
+                    this.direction=-1;
+                    this.body.velocity.y = 120;
+                }
             }
         }
     }
-    
     export class Invis extends Phaser.Button {
         time:Phaser.Timer;
         invis:boolean;
-        
+        avail:Phaser.Timer;
+
         constructor(game:Phaser.Game) {
             super(game,80, 20, "button1");
             game.add.existing(this);
             this.fixedToCamera = true;
+            this.invis = false;
 			this.animations.add('over', [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 0], 16);
             this.onInputOver.add(this.over, this);
             this.onInputUp.add(this.up, this);
 //            this.onInputOut.add(this.out, this);
             this.time = game.time.create(false);
 //            this.setFrames(0, 0, 9, 9);
+            this.avail = game.time.create(false);
+
         }
         
         finish(){
@@ -170,14 +208,22 @@ namespace TSAGame {
         
         up() {
             this.invis = true;
-            this.time.add(Phaser.Timer.SECOND * 4, this.finish, this);
+            this.visible = false;
+            this.exists = false;
+            this.time.add(Phaser.Timer.SECOND * 2.5, this.finish, this);
 			this.time.start(0);
+            this.avail.add(Phaser.Timer.MINUTE, () => {
+                this.visible = true;
+                this.exists = true;
+                if (this.animations.frame) this.animations.frame = 0;
+            })
+			this.avail.start(0);
         }
     }
-    
     export class Shield extends Phaser.Button {
         shield:boolean;
         time:Phaser.Timer;
+        avail:Phaser.Timer;
         
         constructor(game:Phaser.Game) {
             super(game,20, 20, "button2");
@@ -189,6 +235,7 @@ namespace TSAGame {
 //            this.onInputOut.add(this.out, this);
             this.animations.add('over', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0], 16);
             this.time = game.time.create(false);
+            this.avail = game.time.create(false);
         }
         
         finish() {
@@ -204,12 +251,19 @@ namespace TSAGame {
         }
         
         up() {
+            this.visible = false;
+            this.exists = false;
             this.shield = true;
-            this.time.add(Phaser.Timer.SECOND * 4, this.finish, this);
+            this.time.add(Phaser.Timer.SECOND * 3, this.finish, this);
 			this.time.start(0);
+			this.avail.add(Phaser.Timer.MINUTE, () => {
+                this.visible = true;
+                this.exists = true;
+                if (this.animations.frame) this.animations.frame = 0;
+            })
+			this.avail.start(0);
         }
     }
-    
     export class HealthBar extends Phaser.Image {
         playerHp:number;
         heart:any;
@@ -227,7 +281,6 @@ namespace TSAGame {
         }
         
     }
-    
     export class Alarm extends Phaser.Image{
         tintI:Phaser.Image;
         constructor(game:Phaser.Game,x:number,y:number,type:string,group:Phaser.Group) {
@@ -246,7 +299,6 @@ namespace TSAGame {
             this.animations.play("strobe");
         }
     }
-   
     export class Sensor extends Phaser.Sprite{
         tintI:Phaser.Image;
         laser:any;
@@ -257,9 +309,13 @@ namespace TSAGame {
         pos2:number;
         layer:any;
         drones:any;
+        canUse:boolean;
         pl:Phaser.Line;
         triggered:boolean;
         blasts:any;
+        detected:boolean;
+        prevDetected:number;
+        lTimer:Phaser.Timer;
         
         constructor(game:Phaser.Game,x:number,y:number,pos2:number,type:string,direction:number,layer:any) {
             super(game,x-16,y+16,"sensor");
@@ -273,16 +329,19 @@ namespace TSAGame {
             this.myLaser.scale.x = this.laser.length * 0.125;
             this.myLaser.scale.y = 0.125;
             this.pos2=pos2;
-            this.originPos=x-16;
+            if(direction==1||this.direction==3)this.originPos=x-16;
+            else this.originPos=y;
+            this.canUse=true;
             this.direction=direction;
             this.direction2=1;
+            this.lTimer = game.time.create(false);
             this.layer=layer;
             this.drones=undefined;
             this.pl=new Phaser.Line(0,0,0,0);
             this.triggered=false;
+            this.detected=false;
             this.animations.add("shoot",[0,1,2,3,4,5,6,7,8,9,0],30);
             this.blasts=game.add.group();
-
         }
         update(){
         //    this.game.debug.body(this);
@@ -300,13 +359,12 @@ namespace TSAGame {
                      if(this.x>this.originPos){
                         this.body.velocity.x=-30;
                     }else{
-                        
                         this.x=this.originPos;
                         this.body.velocity.x=0;
                         this.direction2=1;
                     }
-                }
-                if(this.direction==3){
+                }if(this.canUse){
+                    if(this.direction==3){
                     this.laser.setTo(this.x + 16, this.y,this.x, 600);
                     var done=false;
                     if(this.drones!=undefined){
@@ -342,22 +400,40 @@ namespace TSAGame {
     	            this.myLaser.scale.y=this.laser.length * 0.125;
     	            this.myLaser.left = this.laser.x;
                     this.myLaser.top = this.laser.y;
-}
-                else{
+            
+                    
+                    }else{
                     this.laser.setTo(this.x + 16, this.y,this.x, 0);
-                    var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
-                    var realTile = -1;
-                    for  (var i = 0; i < tilehits.length; i++) {
+                    var done=false;
+                    if(this.drones!=undefined){
 
-                        if (tilehits[tilehits.length - 1 - i].index != -1 && realTile == -1) realTile = tilehits.length - 1 - i;
+                        var droneL=new Phaser.Line(0, 0, 0, 0);
+                        for(var i =0; i<this.drones.children.length&&!done;i++){
+                            var drone=this.drones.children[i];
+                            droneL.setTo(drone.left+10,drone.bottom,drone.right+10,drone.bottom);
+                            if(droneL.intersects(this.laser, true)){
+                                done=true;
+                                laserEnd=drone.bottom;
+                            }
+                        }
                     }
-                    var laserEnd=0.0;
-                    if (tilehits.length > 1 && realTile != -1) {
+                    if(!done){
+                        
+                    
+                        var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
+                        var realTile = -1;
+                        for  (var i = 0; i < tilehits.length; i++) {
 
-                        laserEnd = tilehits[realTile].worldY+32;
-                    }
-                    else {
-                        laserEnd = 0.0;
+                            if (tilehits[tilehits.length - 1 - i].index != -1 && realTile == -1) realTile = tilehits.length - 1 - i;
+                        }
+                        var laserEnd=0.0;
+                        if (tilehits.length > 1 && realTile != -1) {
+    
+                            laserEnd = tilehits[realTile].worldY+32;
+                        }
+                        else {
+                            laserEnd = 0.0;
+                        }
                     }
 //                    console.log(realTile);
                     this.laser.setTo(this.x + 16, this.y + 10, this.x, laserEnd);
@@ -366,14 +442,17 @@ namespace TSAGame {
     	            this.myLaser.left = this.laser.x;
                     this.myLaser.top = this.laser.y;
                 }
-                
+                    this.myLaser.alpha=1;
+                }else{
+                    this.laser.setTo(0,0,0,0);
+                    this.myLaser.alpha=0;
+                }
             }else{
                 this.body.velocity.x=0;
                 if(this.direction2==1){
                     if(this.y<this.pos2){
                         this.body.velocity.y=30;
                     }else{
-                        console.log(":(");
                         this.y=this.pos2;
                         this.direction2=-1;
                     }
@@ -381,16 +460,111 @@ namespace TSAGame {
                      if(this.y>this.originPos){
                         this.body.velocity.y=-30;
                     }else{
-                        this.y=this.pos2;
-                        this.direction=1;
+                        this.y=this.originPos;
+                        this.direction2=1;
                     }
+                    
+                }
+                if(this.canUse){
+                    if(this.direction==0){
+                    this.laser.setTo(this.x + 4, this.y+2,0, this.y-2);
+                    var done=false;
+                    var laserEnd=0;
+                    if(this.drones!=undefined){
+
+                        var droneL=new Phaser.Line(0, 0, 0, 0);
+                        for(var i =0; i<this.drones.children.length&&!done;i++){
+                            var drone=this.drones.children[i];
+                            droneL.setTo(drone.right,drone.top,drone.right,drone.bottom);
+                            if(droneL.intersects(this.laser, true)){
+                                done=true;
+                                laserEnd=drone.right;
+                            }
+                        }
+                    }
+                    if(!done){
+                        var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
+                        var realTile = -1;
+                    
+                        for  (var i = 0; i < tilehits.length; i++) {
+                        
+                            if (tilehits[tilehits.length - 1 - i].index != -1 && realTile == -1) realTile = tilehits.length - 1 - i;
+                        }
+            
+                        if (tilehits.length > 1 && realTile != -1) {
+                            laserEnd = tilehits[realTile].worldX + 32;
+                        }
+                        else {
+                            laserEnd = 0;
+                        }
+                        
+                    }
+//                    console.log(realTile);
+                    this.laser.setTo(this.x + 4, this.y, laserEnd, this.y);
+    	            this.myLaser.scale.x=this.laser.length * 0.125;
+    	            this.myLaser.scale.y=.125;
+    	            this.myLaser.left = this.laser.x;
+                    this.myLaser.top = this.laser.y;
+            
+                    
+                    }else{
+                    this.laser.setTo(this.x - 4, this.y+2,4800, this.y-2);
+                    var done=false;
+                    var laserEnd=4800;
+                    if(this.drones!=undefined){
+                        var droneL=new Phaser.Line(0, 0, 0, 0);
+                        for(var i =0; i<this.drones.children.length&&!done;i++){
+                            var drone=this.drones.children[i];
+                            droneL.setTo(drone.left,drone.top,drone.left,drone.bottom);
+                            if(droneL.intersects(this.laser, true)){
+                                done=true;
+                                laserEnd=drone.left;
+                            }
+                        }
+                    }
+                    if(!done){
+                        var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
+                        var realTile = -1;
+                        for  (var i = 0; i < tilehits.length; i++) {
+                            if (tilehits[i].index != -1 && realTile == -1) {
+                                realTile = i;
+                            }        
+                        }
+                        if (tilehits.length > 1 && realTile != -1) {
+                            laserEnd = tilehits[realTile].worldX;
+                        }
+                        else {
+                            laserEnd = 3200;
+                        }
+                    }
+//                    console.log(realTile);
+                    this.laser.setTo(this.x -4, this.y, laserEnd, this.y);
+              //      this.game.debug.geom(this.laser, "rgb(255, 255, 0)");
+
+    	            this.myLaser.scale.x=this.laser.length * 0.125;
+    	            this.myLaser.scale.y=.125;
+    	            this.myLaser.left = this.laser.x;
+                    this.myLaser.top = this.laser.y;
+                }
+                    this.myLaser.alpha=1;
+                }else{
+                    this.laser.setTo(0,0,0,0);
+                    this.myLaser.alpha=0;
                 }
             }
         
         if(this.frame>0){
             this.body.velocity.x=0;
             if(this.frame==9){
-                this.blasts.getFirstDead().addIn(this.x, this.y);
+                if(this.direction==3)this.blasts.getFirstDead().addIn(this.x, this.y,0,1,this.direction);
+                else if(this.direction==1)this.blasts.getFirstDead().addIn(this.x, this.y,0,-1,this.direction);
+                else if(this.direction==0)this.blasts.getFirstDead().addIn(this.x, this.y,-1,0,this.direction);
+                else this.blasts.getFirstDead().addIn(this.x, this.y,1,0,this.direction);
+                this.frame=0;
+                this.lTimer.add(Phaser.Timer.SECOND * 3, this.finish, this);
+			    this.lTimer.start(0);
+                this.canUse=false;
+
             }
             
         }
@@ -403,6 +577,8 @@ namespace TSAGame {
     //        this.blast.player=this.pl;
      //       this.blast.udpate2();
         }
+    }finish(){
+        this.canUse=true;
     }
 
     }

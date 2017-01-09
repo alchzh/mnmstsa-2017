@@ -12,17 +12,18 @@ namespace TSAGame {
 //            this.load.image("logo", "./assets/logo.gif");
             this.load.spritesheet("ethan", "./assets/Ethan.png", 35, 62);
             this.load.spritesheet("shield", "./assets/EthanShield.png", 40, 62);
-            this.load.spritesheet("tbot", "./assets/Tbot.png", 40, 61);
+            this.load.spritesheet("tbot", "./assets/last Tbot.png", 40, 61);
             this.load.spritesheet("alien", "./assets/Real Alien8.png", 37, 64);
-            this.load.spritesheet("obot", "./assets/Obot.png", 36, 48);
-            this.load.spritesheet("alienElevator", "./assets/alien elevator.png", 33, 29);
+            this.load.spritesheet("obot", "./assets/last Obot.png", 36, 48);
+            this.load.spritesheet("alienElevator", "./assets/alivator.png", 66, 58);
             this.load.spritesheet("elevator", "./assets/HumanElevator.png", 66, 58);
             this.load.spritesheet("button1", "./assets/InvisibleGUI.png", 40, 40);
             this.load.spritesheet("button2", "./assets/ShieldGUI2.png", 40, 40);
             this.load.image("bigAlienElevator", "./assets/LargeElevator.png");
-            this.load.image("sky", "./assets/Background.png");
-            this.load.image("lvl2", "./assets/Bg2.png");
+            this.load.image("sky", "./assets/lev1bg.png");
+            this.load.image("lvl2", "./assets/levl2bg.png");
             this.load.image("lvl3", "./assets/bg33.png");
+            this.load.image("title", "./assets/t.png");
 
             this.load.image("suspicion", "./assets/suspicious.png");
 
@@ -34,9 +35,12 @@ namespace TSAGame {
             this.load.image("fbpt", "./assets/Final boss.png");
             this.load.image("heart", "./assets/Heart.png");
             this.load.image("Ship Tileset", "./assets/Tile Sets/tileset.png");
-            this.load.image("Ship2 Tileset", "./assets/Tile Sets/Level2 tileset.png");
+            this.load.image("Ship2 Tileset", "./assets/Tile Sets/ship2 tileset.png");
             this.load.image("Level 3 tileset", "./assets/Tile Sets/Level 3.png");
-            this.load.image("pauseButton", "./assets/pause button.png");
+            this.load.image("pauseButton", "./assets/pause.png");
+            this.load.image("resume", "./assets/resume.png");
+            this.load.image("reset", "./assets/Reset Button.png");
+
             this.load.image("arm", "./assets/alienArm.png");
 
             this.load.image("Laser", "./assets/Laser.png");
@@ -55,14 +59,14 @@ namespace TSAGame {
 //            this.load.spritesheet("obot", "./assets/TankDroneThing2.png", 40, 61);
             this.load.audio("first", "./assets/sound/first.mp3");
             this.load.audio("second", "./assets/sound/OLIVER's song.mp3");
-            this.load.audio("third", "./assets/sound/TheLevel1.mp3");
+            this.load.audio("1", "./assets/sound/TheLevel1.mp3");
             this.load.audio("alarm", "./assets/sound/alarm1.mp3");
             
             
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/ship3.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map2', 'assets/Tile maps/lvl2.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map3', 'assets/Tile maps/AlienBase.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map2', 'assets/Tile maps/alien ship.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map3', 'assets/Tile maps/alienBase.json', null, Phaser.Tilemap.TILED_JSON);
 
 //            this.player = Player();
         }
@@ -84,15 +88,22 @@ namespace TSAGame {
     }export class titleScreen extends Phaser.State {
         play:any;
         instructions:Phaser.Button;
+        bgMusic:any;
         
         create(){
-            this.play = this.game.add.button(313, 150, "play");
+            var bg = this.game.add.sprite(0, 0, "title");
+        //    bg.scale.x=2;
+        //    bg.scale.y=2;
+            this.play = this.game.add.button(313, 190, "play");
             this.play.onInputDown.add(this.playPress, this);
-            this.instructions = this.game.add.button(154, 300, "instruct");
+            this.instructions = this.game.add.button(154, 330, "instruct");
             this.instructions.onInputDown.add(this.instruct, this);
-
+            this.bgMusic=this.game.add.audio("first", 0.6, true);
+            this.bgMusic.play();
         }
         playPress(){
+            this.bgMusic.stop();
+
             this.game.state.start("select", true, false);
         }instruct(){
             this.game.state.start("select", true, false);

@@ -22,6 +22,7 @@ namespace TSAGame {
         playerX:number;
         playerY:number;
         prevSpot:number;
+        isTriggered:boolean;
         suspicion:Phaser.Image;
         disrupted:boolean;
         arm:any;
@@ -43,6 +44,7 @@ namespace TSAGame {
 			this.laser = new Phaser.Line(0, this.y, 200, this.y);
 			this.myLaser = this.game.add.image(this.x, this.y, 'Laser');
             this.myLaser.scale.x = this.laser.length * 0.125;
+            this.isTriggered=false;
             this.myLaser.scale.y = 0.125;
             this.myLaser.alpha=0;
             this.layer=layer;
@@ -74,18 +76,15 @@ namespace TSAGame {
         updateLine(playerLine:Phaser.Line){
             if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 15 ) {
                 if (this.direction == -1) {
-                    this.laser.setTo(this.left +8 ,this.y + 5, 3200, this.y + 5);
+                    this.laser.setTo(this.left + 8,this.y + 5, 3200, this.y + 5);
                     var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
                     var realTile = -1;
-                    
                     for  (var i = 0; i < tilehits.length; i++) {
-                        
                         if (tilehits[i].index != -1 && realTile == -1) {
                             realTile = i;
                         }        
                     }
-                    
-                    if (tilehits.length1 && realTile != -1) {
+                    if (tilehits.length > 1 && realTile != -1) {
                         this.laserEnd = tilehits[realTile].worldX;
                     }
                     else {
@@ -153,13 +152,17 @@ namespace TSAGame {
                 dTime = 60/this.game.time.fps;
             }else{
                 dTime=1;
+            }            
+            if(alarmsOn&&!this.suspicious){
+                this.suspicious=true;
+                this.animations.play('suspicious');
+
             }
             this.body.velocity.x=0;
             if(this.animations.frame<14&&this.animations.frame>0){
                if(!this.suspicious)this.body.velocity.x=65;
                else this.body.velocity.x=140;
             }
-            
             if (this.direction == -1) {
                 
                 if (this.animations.frame < 14&&this.animations.currentAnim.name!="stop") {
@@ -194,15 +197,17 @@ namespace TSAGame {
 
                     }
                 }
-            }
+            }if(this.animations.currentAnim.name=="triggered")this.isTriggered=true;
+            else this.isTriggered=false;
           //  console.log(this.animations.currentAnim ); 
             if(this.frame==22)this.animations.play("grab");
             else if(this.frame==26)this.animations.play("troubleShoot");
             else if(this.animations.currentAnim.name=="move"&&this.suspicious)this.animations.play("move",16);
-            else if(this.animations.currentAnim.name=="triggered"&&this.frame==14){
+            else if(this.isTriggered&&this.frame==14){
                 this.suspicious=true;   
                 this.animations.play("move",16);
             }
+            
             if(this.suspicious){
                 this.prevSus+=1*dTime;
                 this.suspicion.alpha=1;
@@ -211,15 +216,16 @@ namespace TSAGame {
             }else{
                 this.suspicion.alpha=0;
                 this.prevSus=0;
-            }if(this.prevSus>=120){
+            }if(this.prevSus>=600){
                 this.animations.play("move",12);
                 this.suspicious=false;
+                this.prevSus=0;
             }
-            if(this.game.input.keyboard.isDown(Phaser.Keyboard.X)&&this.playerY==this.bottom){
-                if(!this.disrupted){
+            if(this.game.input.keyboard.isDown(Phaser.Keyboard.Z)&&this.playerY==this.bottom){
+                if(!this.disrupted&&this.animations.frame<15){
                     if(this.direction==-1&&this.left-this.playerX<=60){
                         this.disrupt();
-                    }if(this.direction==1&&this.playerX-40-this.right<=60&&this.game.input.keyboard.isDown(Phaser.Keyboard.X)){
+                    }if(this.direction==1&&this.playerX-40-this.right<=60){
                         this.disrupt();
                     }
                 }
@@ -259,29 +265,41 @@ namespace TSAGame {
         stuckX:number;
         myLaser:Phaser.Image;
         layer:any;
-        constructor(game:Phaser.Game,x:number,y:number,x2:number,layer:any) {
+        shutDown:boolean;
+        disrupted:boolean;
+        playerX:number;
+        playerY:number;
+        player:any;
+        
+        constructor(game:Phaser.Game,x:number,y:number,x2:number,layer:any,group:any,player:any) {
             super(game,x, y, 'tbot', 0);
     		game.add.existing(this);
             game.physics.arcade.enableBody(this);
 
     		this.anchor.setTo(0.5, 0);    
     		this.body.gravity.y = 400;
-            
+            group.add(this);
         
             this.originX = x;
             this.x2 = x2;
 			this.direction = -1;
-		
+			this.shutDown=false;
+		    this.playerX=player.x;
+		    this.player=player;
+		    this.playerY=player.y;
             this.laserEnd = 3200;
 			this.laser = new Phaser.Line(0, this.y, 200, this.y);
 			this.myLaser = this.game.add.image(this.x, this.y, 'Laser');
             this.myLaser.scale.x = this.laser.length * 0.125;
             this.myLaser.scale.y = 0.125;
-            
+                    //    this.body.immovable=true;
+            this.stuckX=0;
+            this.prevX=x;
+			this.animations.add('crash',[20,20,20,20,20,0], 1, true);
 			this.animations.add('move',[0, 1, 2, 3, 4, 5], 12, true);
 			this.animations.add('alerted',[14, 15, 16, 17, 18, 19], 10, true);
-			this.animations.add('turn',[6, 7, 8, 9, 10, 11, 12, 13], 20);
-			this.animations.add('turnBack',[13,12,11,10,9,8,7,6,0], 20);
+			this.animations.add('turn',[6, 7, 8, 9, 10, 11, 12, 13], 20,false);
+			this.animations.add('turnBack',[12,11,10,9,8,7,6,5,5], 20,false);
 			this.layer=layer;
         }
         updateLine(playerLine:Phaser.Line){
@@ -324,14 +342,12 @@ namespace TSAGame {
                     this.laser.setTo(this.left + 8, this.y + 5, this.laserEnd, this.y + 5);
     	        }
 //                this.laserEnd = tilehits[0].worldX;
-//                this.game.debug.geom(this.laser, "rgb(255, 0, 0)");
+//               this.game.debug.geom(this.laser, "rgb(255, 0, 0)");
                 var point = playerLine.intersects(this.laser,true);
                 
                 if (point != null) {
-                    var fx = this.game.add.audio('alarm', 1, false);
-                    fx.play();
                     
-                    if (this.animations.frame >= 6 && this.animations.frame <= 14) this.scale.x = -this.scale.x;
+         //           if (this.animations.frame >= 6 && this.animations.frame <= 14) this.scale.x = -this.scale.x;
                     
                     this.animations.play('alerted');
                 }
@@ -345,21 +361,27 @@ namespace TSAGame {
             this.myLaser.left = this.laser.x;
             this.myLaser.top = this.laser.y;
             this.body.velocity.x = 0;
+            if(this.animations.frame<20){
+                this.game.physics.arcade.collide(this, this.player);
+
+            }
             if (this.direction == -1) {
-            	    if (this.animations.frame < 6) {
-            	        this.animations.play("move");
-            	        this.scale.x = -1;
-                        this.body.velocity.x = 50;
-            	    }
-            	    if (this.x >= this.x2) {
-            	        this.animations.play('turn');
+                if (this.animations.frame < 6) {
+                    this.animations.play("move");
+        	        this.scale.x = -1;
+                    this.body.velocity.x = 50;
+        	    }
+        	    
+                if (this.x >= this.x2||this.stuckX>150) {
+        	        this.animations.play('turn');
+                        
             	        
-            	        if (this.animations.frame == 13) {
-            	            this.scale.x = 1;
-            	            this.animations.play('turnBack');
-            	            this.direction = 1;
-            	        }
-            	    }
+        	    }if (this.animations.frame === 13) {
+        	        this.frame=12;
+                    this.scale.x = 1;
+    	            this.animations.play('turnBack');
+    	            this.direction = 1;
+               }
             }
             else if (this.direction == 1) {
                 if (this.animations.frame < 6) {
@@ -367,16 +389,38 @@ namespace TSAGame {
                     this.scale.x = 1;
                     this.body.velocity.x = -50;
                 }
-                if (this.x <= this.originX) {
+                if (this.x < this.originX||this.stuckX>150) {
                     this.animations.play('turn');
-                    if (this.animations.frame == 13) {
-                        this.scale.x = -1;
-                        this.animations.play('turnBack');
-                        this.direction = -1;
+                }if (this.animations.frame === 13) {
+        	        this.frame=12;
+                    this.scale.x = -1;
+    	            this.animations.play('turnBack');
+    	            this.direction = -1;
+               }
+                  
+            }
+            if(this.game.input.keyboard.isDown(Phaser.Keyboard.Z)&&this.playerY==this.bottom){
+                   
+                if(!this.shutDown){
+
+                    if(this.direction==-1&&this.x-this.playerX-16<=40&&this.x-this.playerX-16>=0){
+                        this.break();
+                    }
+
+                    if(this.direction==1&&this.playerX-16-this.x<=40&&this.playerX-16-this.x>=0){
+                        this.break();
                     }
                 }
             }
-        }
+            if(this.prevX==this.x&&this.animations.frame<6){
+                this.stuckX++;
+            }else{
+                this.stuckX=0;
+            }
+            this.prevX=this.x;
+        }break(){
+            this.animations.play("crash");
+    	}
     }
     
     export class Obot extends Phaser.Sprite {
@@ -391,9 +435,13 @@ namespace TSAGame {
         myLaser:Phaser.Image;
         prevX:number;
         stuckX:number;
+        shutDown:boolean;
+        playerX:number;
+        playerY:number;
+        player:any;
         layer:any;
         
-    	constructor(game:Phaser.Game,x:number,y:number,x2:number,group:Phaser.Group,layer:any) {
+    	constructor(game:Phaser.Game,x:number,y:number,x2:number,group:Phaser.Group,layer:any,player:any) {
     		super(game,x,y,'obot',0);
     		
     		this.anchor.setTo(0.5,0);
@@ -408,6 +456,10 @@ namespace TSAGame {
 			this.direction = -1;
 			this.originX = this.x;
 			this.x2 = x2;
+			this.shutDown=false;
+			this.player=player;
+			this.playerX=player.x;
+			this.playerY=player.bottom;
 			this.prevX = x;
 			this.stuckX=0;
 		    group.add(this);
@@ -416,7 +468,10 @@ namespace TSAGame {
 			this.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
 			this.animations.add('moveBack', [8, 9, 10, 11, 12, 0], 5);
 			this.animations.add('moveForward', [14, 15, 16, 17, 18, 0], 5);
-			this.animations.add('alert', [19], 5);
+			this.animations.add('alert', [20,21,22,20], 5);
+			this.animations.add('crash', [23,23,23,23,23,23,0], 1);
+       //     this.body.immovable=true;
+
 			this.laserEnd = 3200;
 			this.laser = new Phaser.Line(0, this.y, 200, this.y);
 			this.myLaser = this.game.add.image(this.x, this.y, 'Laser');
@@ -429,9 +484,9 @@ namespace TSAGame {
     	}
     	
     	updateLine(playerLine:Phaser.Line,map:Phaser.Tilemap) {
-            console.log(this.game.time.fps);
+  //          console.log(this.game.time.fps);
             
-            if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 8 && this.inCamera) {
+            if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 8) {
                 
                 if (this.direction == -1) {
                     this.laser.setTo(this.right - 8,this.y + 5, 3200, this.y + 5);
@@ -498,8 +553,13 @@ namespace TSAGame {
             }else{
                 dTime=1;
             }
-        //    if (this.inCamera) {
-            
+            if(this.animations.frame<20){
+                console.log(this.player);
+                this.game.physics.arcade.collide(this, this.player);
+
+            }
+      //      if (this.inCamera) this.body.gravity.y=0;
+        //    else this.body.gravity.y=200;
                 if (this.animations.frame < 8) this.animations.play('move');
             
                 var time = this.previousTime - this.globalTime.seconds;
@@ -547,8 +607,22 @@ namespace TSAGame {
                     this.stuckX=0;
                 }
                 this.prevX = this.x;
+                if(this.game.input.keyboard.isDown(Phaser.Keyboard.Z)&&this.playerY==this.bottom){
+                if(!this.shutDown){
+                    if(this.direction==-1&&this.x-this.playerX-16<=30&&this.x-this.playerX-16>=0){
+                        this.break();
+                    }
+                    console.log(this.x-this.playerX-16);
 
+                    if(this.direction==1&&this.playerX-16-this.x<=30&&this.playerX-16-this.x>=0){
+                        this.break();
+                    }
+                }
+            }
                 this.previousTime = this.globalTime.seconds;
+    	    }
+    	    break(){
+    	        this.animations.play("crash");
     	    }
     //	}
 

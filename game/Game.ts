@@ -1,10 +1,5 @@
-/// <reference path="./Boot.ts"/>
-/// <reference path="./Preloader.ts"/>
-/// <reference path="./Credits.ts" />
-/// <reference path="./Player.ts"/>
-/// <reference path="./enemies.ts"/>
-/// <reference path="./otherSprites.ts"/>
-/// <reference path="./projectiles.ts"/>
+//git add <every file/directory that changed>ie: game/ or site/assets/
+//git commit -m "message"
 
 namespace TSAGame {
     export class Game extends Phaser.Game {
@@ -29,5 +24,5 @@ namespace TSAGame {
 }
 
 window.onload = () => {
-    new TSAGame.Game();
+    let lgame = new TSAGame.Game();
 };
