@@ -19,23 +19,22 @@ namespace TSAGame {
             this.exists = false;
             this.layer=layer;
             this.alive=false;
+            this.animations.add("p",[0,1,2,3,4,5,6,7],30);
+            this.animations.play("p");
      //       this.outOfCameraBoundsKill =true;
             
         }
         
         update(){
            // this.game.debug.body(this);
-            if(this.game.physics.arcade.overlap(this.layer, this)){
+            if(this.game.physics.arcade.collide(this.layer, this)){
+                console.log("was?");
                 this.kill(); 
-                this.body.enable=false;
-                this.exists=false;
-                this.autoCull =false;
             }
        //     else if(this.game.physics.arcade.collide(this, this.player)){
         //        console.log("KILL");
          //       this.player.health-=50;
           //  }
-            if(this.alive === false)this.exists=false;
         }
         update2(player:Phaser.Sprite){
             // console.log("hi");

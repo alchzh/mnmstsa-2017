@@ -11,7 +11,6 @@ namespace TSAGame {
         
         constructor(game: Phaser.Game, x: number, y: number) {
             super(game, x, y, "ethan", 0);
-            console.log("Added ");
             game.add.existing(this);
             game.physics.arcade.enable(this);
 //            game.time.desiredFps = 30;
@@ -36,9 +35,20 @@ namespace TSAGame {
         }
 
         public update() {
-            if(this.health<0.01){
-                this.game.state.start("select");
+            if (this.health < 0)
+            {
+                this.health = 0;
             }
+            if (this.health > 0 && this.health <200)
+            {
+                this.health += 0.02;
+            }
+            else
+            if(this.health<=0){
+                this.game.sound.stopAll();
+                this.game.state.start("playerDeath");
+            }
+            
             let dTime=0.0;
             if(this.game.time.fps>2){
                 dTime = 60/this.game.time.fps;

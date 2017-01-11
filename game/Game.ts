@@ -3,7 +3,6 @@
 
 namespace TSAGame {
     export class Game extends Phaser.Game {
-        
         constructor() {
             super(800, 600, Phaser.AUTO, "");
             
@@ -17,12 +16,15 @@ namespace TSAGame {
             this.state.add("titleScreen", titleScreen, false);
             this.state.add("select", LevelSelect, false);
             this.state.add("finalBoss", FinalBoss, false);
+            this.state.add("playerDeath", PlayerDeath, false);
             this.state.start("Boot");
             console.log(this.time);
         }
     }
 }
 
+let lgame;
+
 window.onload = () => {
-    let lgame = new TSAGame.Game();
+    lgame = new TSAGame.Game();
 };

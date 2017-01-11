@@ -10,7 +10,7 @@ namespace TSAGame {
         glass:any;
         moving:boolean;
         pauseMovement:boolean;
-        reverse:boolean
+        reverse:boolean;
         prevPM:number;
         playerX:number;
         playerY:number;
@@ -101,8 +101,6 @@ namespace TSAGame {
                     this.body.velocity.y=-120;
                 }
             }
-            console.log(this.reverse);
-
             if(!this.reverse){
                 if (this.body.velocity.y == 120 && !(this.y < this.y2)) {
                     this.body.velocity.y = 0;
@@ -163,7 +161,6 @@ namespace TSAGame {
                     this.pauseMovement=false;
                     this.direction=1;
                     this.body.velocity.y = -120;
-                    console.log("happiness");
                 }
                 else {
                     
@@ -227,7 +224,7 @@ namespace TSAGame {
         
         constructor(game:Phaser.Game) {
             super(game,20, 20, "button2");
-            
+            this.shield = false;
             game.add.existing(this);
             this.fixedToCamera = true;
             this.onInputOver.add(this.over, this);
@@ -260,7 +257,7 @@ namespace TSAGame {
                 this.visible = true;
                 this.exists = true;
                 if (this.animations.frame) this.animations.frame = 0;
-            })
+            });
 			this.avail.start(0);
         }
     }
@@ -268,14 +265,14 @@ namespace TSAGame {
         playerHp:number;
         heart:any;
         constructor(game:Phaser.Game) {
-            super(game, 525, 30, "Laser");
-            
+            super(game, 175, 30, "Laser");
+
             this.fixedToCamera = true;
             
  //           this.scale.x = 0.4;
             this.scale.y = 1.5;
             game.add.existing(this);
-            this.heart = game.add.sprite(496, 22, 'heart');
+            this.heart = game.add.sprite(150, 19, 'heart');
             this.heart.fixedToCamera = true;
 
         }
@@ -316,8 +313,9 @@ namespace TSAGame {
         detected:boolean;
         prevDetected:number;
         lTimer:Phaser.Timer;
+        blastSound:any;
         
-        constructor(game:Phaser.Game,x:number,y:number,pos2:number,type:string,direction:number,layer:any) {
+        constructor(game:Phaser.Game,x:number,y:number,pos2:number,type:string,direction:number,layer:any,group:any) {
             super(game,x-16,y+16,"sensor");
             game.add.existing(this);
             game.physics.arcade.enableBody(this);
@@ -329,8 +327,9 @@ namespace TSAGame {
             this.myLaser.scale.x = this.laser.length * 0.125;
             this.myLaser.scale.y = 0.125;
             this.pos2=pos2;
-            if(direction==1||this.direction==3)this.originPos=x-16;
+            if(direction==1||direction==3)this.originPos=x-16;
             else this.originPos=y;
+            group.add(this);
             this.canUse=true;
             this.direction=direction;
             this.direction2=1;
@@ -340,12 +339,13 @@ namespace TSAGame {
             this.pl=new Phaser.Line(0,0,0,0);
             this.triggered=false;
             this.detected=false;
-            this.animations.add("shoot",[0,1,2,3,4,5,6,7,8,9,0],30);
+            this.animations.add("shoot",[0,1,2,3,4,5,6,7],15);
+            this.blastSound = this.game.add.audio("blast", 0.6, false);
             this.blasts=game.add.group();
         }
         update(){
         //    this.game.debug.body(this);
-            if(this.direction==1||this.direction==3){
+            if(this.direction===1||this.direction===3){
                 this.body.velocity.y=0;
                 if(this.direction2==1){
                     if(this.x<this.pos2){
@@ -363,7 +363,9 @@ namespace TSAGame {
                         this.body.velocity.x=0;
                         this.direction2=1;
                     }
-                }if(this.canUse){
+                }
+                if(this.originPos==this.pos2)this.body.velocity.x=0;
+                if(this.canUse){
                     if(this.direction==3){
                     this.laser.setTo(this.x + 16, this.y,this.x, 600);
                     var done=false;
@@ -468,37 +470,33 @@ namespace TSAGame {
                 if(this.canUse){
                     if(this.direction==0){
                     this.laser.setTo(this.x + 4, this.y+2,0, this.y-2);
-                    var done=false;
                     var laserEnd=0;
+                    
                     if(this.drones!=undefined){
 
                         var droneL=new Phaser.Line(0, 0, 0, 0);
-                        for(var i =0; i<this.drones.children.length&&!done;i++){
+                        for(var i =0; i<this.drones.children.length; i++){
                             var drone=this.drones.children[i];
                             droneL.setTo(drone.right,drone.top,drone.right,drone.bottom);
                             if(droneL.intersects(this.laser, true)){
-                                done=true;
                                 laserEnd=drone.right;
                             }
                         }
                     }
-                    if(!done){
                         var tilehits = this.layer.getRayCastTiles(this.laser, 4, false, false);
                         var realTile = -1;
                     
-                        for  (var i = 0; i < tilehits.length; i++) {
+                        for  (var i = 0; i < tilehits.length&&realTile===-1; i++) {
                         
                             if (tilehits[tilehits.length - 1 - i].index != -1 && realTile == -1) realTile = tilehits.length - 1 - i;
                         }
-            
                         if (tilehits.length > 1 && realTile != -1) {
-                            laserEnd = tilehits[realTile].worldX + 32;
+                            if(tilehits[realTile].worldX + 32>laserEnd)laserEnd = tilehits[realTile].worldX + 32;
                         }
                         else {
                             laserEnd = 0;
                         }
                         
-                    }
 //                    console.log(realTile);
                     this.laser.setTo(this.x + 4, this.y, laserEnd, this.y);
     	            this.myLaser.scale.x=this.laser.length * 0.125;
@@ -555,7 +553,8 @@ namespace TSAGame {
         
         if(this.frame>0){
             this.body.velocity.x=0;
-            if(this.frame==9){
+            if(this.frame==7){
+                this.blastSound.play();
                 if(this.direction==3)this.blasts.getFirstDead().addIn(this.x, this.y,0,1,this.direction);
                 else if(this.direction==1)this.blasts.getFirstDead().addIn(this.x, this.y,0,-1,this.direction);
                 else if(this.direction==0)this.blasts.getFirstDead().addIn(this.x, this.y,-1,0,this.direction);
@@ -564,14 +563,12 @@ namespace TSAGame {
                 this.lTimer.add(Phaser.Timer.SECOND * 3, this.finish, this);
 			    this.lTimer.start(0);
                 this.canUse=false;
-
             }
             
         }
         if(this.pl.intersects(this.laser, true)){
             this.triggered=true;
             this.animations.play("shoot");
-            
         } 
         if(this.triggered){
     //        this.blast.player=this.pl;
@@ -582,5 +579,4 @@ namespace TSAGame {
     }
 
     }
-    
 }

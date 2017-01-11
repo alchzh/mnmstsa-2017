@@ -59,7 +59,7 @@ namespace TSAGame {
 			this.animations.add('grab',[23,24,25,26], 5);
 			this.animations.add('troubleShoot',[26,26,27,26,27,26,26,27,26,27,26], 4);
             this.animations.add('triggered',[28,29,30,31,29,30,31,29,30,31,14], 7);
-            this.animations.add('suspicious',[14,0], 4);
+            this.animations.add('suspicious',[14,0], 2);
             this.suspicion=game.add.image(this.x, this.y+5,"suspicion");
             this.arm=this.addChild((game.make.image(-11, 13, 'arm')));
             this.arm.alpha=0;
@@ -248,10 +248,11 @@ namespace TSAGame {
         triggered(){
             if(this.frame<15){
                 this.animations.play("triggered");
-                var y=this.playerY+(this.y+13);
+                var y=this.playerY-(this.y+13);
                 var x=this.playerX-(this.x-11);
                 var z=y/x;
-                this.arm.rotation=Math.atan2(y,x);
+                console.log(this.game.math.angleBetween(this.x-11,this.y+13,this.playerX,this.playerY));
+                this.arm.rotation = this.game.math.angleBetween(this.x-11,this.y+13,this.playerX,this.playerY) - +(this.playerY < this.y+13)*0;
             }
         }
 
@@ -398,7 +399,7 @@ namespace TSAGame {
     	            this.direction = -1;
                }
                   
-            }
+            }if(alarmsOn)this.body.velocity.x*=1.75;
             if(this.game.input.keyboard.isDown(Phaser.Keyboard.Z)&&this.playerY==this.bottom){
                    
                 if(!this.shutDown){
@@ -468,7 +469,7 @@ namespace TSAGame {
 			this.animations.add('move', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
 			this.animations.add('moveBack', [8, 9, 10, 11, 12, 0], 5);
 			this.animations.add('moveForward', [14, 15, 16, 17, 18, 0], 5);
-			this.animations.add('alert', [20,21,22,20], 5);
+			this.animations.add('alert', [20,21,22,24], 5);
 			this.animations.add('crash', [23,23,23,23,23,23,0], 1);
        //     this.body.immovable=true;
 
@@ -534,7 +535,6 @@ namespace TSAGame {
                 
                 if (point != null) {
                     
-                    if (this.animations.frame >= 8 && this.animations.frame != 19) this.scale.x = -this.scale.x;
                     this.animations.play("alert");
                 }
             }
@@ -554,10 +554,9 @@ namespace TSAGame {
                 dTime=1;
             }
             if(this.animations.frame<20){
-                console.log(this.player);
                 this.game.physics.arcade.collide(this, this.player);
 
-            }
+            }if(alarmsOn)this.body.velocity.x*=1.75;
       //      if (this.inCamera) this.body.gravity.y=0;
         //    else this.body.gravity.y=200;
                 if (this.animations.frame < 8) this.animations.play('move');
@@ -776,7 +775,7 @@ namespace TSAGame {
                     this.animations.play('turn');
                 }
             }
-            
+            if(alarmsOn)this.body.velocity.x*=1.75;
     	    this.previousTime = this.globalTime.seconds;
     	}
     }

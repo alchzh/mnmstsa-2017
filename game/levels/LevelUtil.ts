@@ -9,13 +9,16 @@ namespace TSAGame {
     }export function pauseU(state:Phaser.State,resume:any,reset:any){
         
         resume.alpha=1;
-        
-        var mx = state.game.input.mousePointer.x;
-        var my = state.game.input.mousePointer.y;
+        reset.alpha=1;
+        var mx = state.game.input.mousePointer.worldX;
+        var my = state.game.input.mousePointer.worldY;
         if(mx>=resume.left&&mx<=resume.right&&my>=resume.top&&my<=resume.bottom &&state.game.input.activePointer.leftButton.isDown){
              state.game.paused=false;
         }if(mx>=reset.left&&mx<=reset.right&&my>=reset.top&&my<=reset.bottom &&state.game.input.activePointer.leftButton.isDown){
-             state.game.paused=false;
+            state.game.sound.stopAll();
+            state.game.state.start("titleScreen", true, false);
+            state.game.paused=false;
+
         }
     }
     
