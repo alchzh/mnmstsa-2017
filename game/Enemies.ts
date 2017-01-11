@@ -63,7 +63,6 @@ namespace TSAGame {
             this.suspicion=game.add.image(this.x, this.y+5,"suspicion");
             this.arm=this.addChild((game.make.image(-11, 13, 'arm')));
             this.arm.alpha=0;
-            this.arm.anchor.setTo(0.29, .1);
        //     this.suspicion.alpha=0;
 			//this.animations.add('alerted',[14, 15, 16, 17, 18, 19], 10, true);
 	//		this.animations.add('turn',[6, 7, 8, 9, 10, 11, 12, 13], 20);
@@ -271,6 +270,7 @@ namespace TSAGame {
         playerX:number;
         playerY:number;
         player:any;
+        deactivateS:any;
         
         constructor(game:Phaser.Game,x:number,y:number,x2:number,layer:any,group:any,player:any) {
             super(game,x, y, 'tbot', 0);
@@ -302,6 +302,7 @@ namespace TSAGame {
 			this.animations.add('turn',[6, 7, 8, 9, 10, 11, 12, 13], 20,false);
 			this.animations.add('turnBack',[12,11,10,9,8,7,6,5,5], 20,false);
 			this.layer=layer;
+		    this.deactivateS = this.game.add.audio("deactivate", 0.3, false);
         }
         updateLine(playerLine:Phaser.Line){
             if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 6 ) {
@@ -420,6 +421,7 @@ namespace TSAGame {
             }
             this.prevX=this.x;
         }break(){
+            this.deactivateS.play();
             this.animations.play("crash");
     	}
     }

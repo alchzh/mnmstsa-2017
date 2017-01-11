@@ -19,9 +19,9 @@ namespace TSAGame {
             this.load.spritesheet("elevator", "./assets/HumanElevator.png", 66, 58);
             this.load.spritesheet("button1", "./assets/InvisibleGUI.png", 40, 40);
             this.load.spritesheet("button2", "./assets/ShieldGUI2.png", 40, 40);
-            this.load.spritesheet("blast2", "./assets/blastf.png", 47, 47);
+            this.load.spritesheet("blast", "./assets/blastf.png", 47, 47);
             this.load.image("fire", "./assets/blastf.png");
-            this.load.image("blast", "./assets/blast34.png");
+            this.load.image("blast2", "./assets/blast34.png");
             this.load.image("bigAlienElevator", "./assets/LargeElevator.png");
             this.load.image("sky", "./assets/lev1bg.png");
             this.load.image("lvl2", "./assets/levl2bg.png");
@@ -57,6 +57,7 @@ namespace TSAGame {
             this.load.image("level3", "./assets/lvl3 button.png");
             this.load.image("lvlLock", "./assets/levelLocked.png");
             this.load.image("lvlSelect", "./assets/Level Select Screen.png");
+            this.load.image("gameover", "./assets/gamover.png");
             this.load.spritesheet("sensor", "./assets/Security Laser2.png",32,32);
 
             this.load.image("instruct", "./assets/instruct.png");
@@ -76,25 +77,14 @@ namespace TSAGame {
 
             this.load.audio("alarm", "./assets/sound/alarm1.mp3");
             this.load.audio("blast", "./assets/sound/blast.mp3");
-            
+            this.load.audio("deactivate", "./assets/sound/deactivate.mp3");
             
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/TheHumanShip.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map2', 'assets/Tile maps/alienShip.json', null, Phaser.Tilemap.TILED_JSON);// 
-            this.load.tilemap('map3', 'assets/Tile maps/ToraxBase.json', null, Phaser.Tilemap.TILED_JSON);// not level 1 ill look at the error
-/*
-caught TypeError: Cannot set property 'x' of undefined
-    at Level1.create (Level1.ts:139)
-    at Phaser.StateManager.loadComplete (phaser.js:30083)
-    at Phaser.StateManager.preUpdate (phaser.js:29849)
-    at Game.updateLogic (phaser.js:36333)
-    at Game.update (phaser.js:36280)
-    at Phaser.RequestAnimationFrame.updateRAF (phaser.js:61979)
-    at _onLoop (phaser.js:61962)
-*/
-//            this.player = Player();
+            this.load.tilemap('map3', 'assets/Tile maps/TheToBase.json', null, Phaser.Tilemap.TILED_JSON);// not level 1 ill look at the error
         }
-
+// in the assets
         create() {
             
             this.add.tween(this.preloadBar).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true).onComplete.add(() => this.game.state.start("titleScreen", true, false));
@@ -119,13 +109,15 @@ caught TypeError: Cannot set property 'x' of undefined
             var bg = this.game.add.sprite(0, 0, "title");
         //    bg.scale.x=2;
         //    bg.scale.y=2;
-            this.play = this.game.add.button(313, 225, "play");
+            this.play = this.game.add.button(this.game.world.centerX, 225, "play");
+            this.play.x = this.game.world.centerX - this.play.width / 2;
             this.play.onInputDown.add(this.playPress, this);
-            this.instructions = this.game.add.button(154, 350, "instruct");
+            this.instructions = this.game.add.button(this.game.world.centerX, 350, "instruct");
+            this.instructions.x = this.game.world.centerX - this.instructions.width / 2;
             this.instructions.onInputDown.add(this.instruct, this);
             this.bgMusic=this.game.add.audio("first", 0.6, true);
             this.bgMusic.play();  
-        }
+        }//it will be overrun by aliens and robots
         playPress(){
             this.bgMusic.stop();
 
@@ -157,18 +149,19 @@ caught TypeError: Cannot set property 'x' of undefined
             this.reset.onInputDown.add(this.rset, this);
             
             this.lvl1 = this.game.add.button(this.game.world.centerX - 210, 175, "level1");
-            this.lvl1.x -= this.lvl1.width;
-            this.lvl1.scale.x = 2;
-            this.lvl1.scale.y = 2;
+            this.lvl1.x = this.game.world.centerX - 210 - this.lvl1.width;
+            this.lvl1.scale.x = 2; // cool. There should be a sound effect, tho. I'll try to make one. Emphasis on try.
+            this.lvl1.scale.y = 2;//have you pressed z behind an alien yet? do it. lol
             this.lvl1.onInputDown.add(this.levl1, this);
-            
+            //  ok
+            //dont play level3 for a while.
             this.lvl2 = this.game.add.button(this.game.world.centerX, 175, "level2");
-            this.lvl2.x -= this.lvl2.width;
+            this.lvl2.x = this.game.world.centerX - this.lvl2.width;
             this.lvl2.scale.x = 2;
             this.lvl2.scale.y = 2;
             
             this.lvl3 = this.game.add.button(this.game.world.centerX + 210, 175, "level3");
-            this.lvl3.x -= this.lvl3.width;
+            this.lvl3.x = this.game.world.centerX + 210 - this.lvl3.width;
             this.lvl3.scale.x = 2;
             this.lvl3.scale.y = 2;
             
@@ -226,15 +219,21 @@ caught TypeError: Cannot set property 'x' of undefined
     export class PlayerDeath extends Phaser.State {
         reset:Phaser.Button;
         text:any;
+        timer:any;
         
         create() {
-            var bg = this.game.add.sprite(0, 0, "lvlSelect");
-            
-            this.reset = this.game.add.button(this.game.world.centerX,445, "reset");
-            this.reset.x -= this.reset.width;
-            this.reset.scale.x = 2;
-            this.reset.scale.y = 2;
-            this.reset.onInputDown.add(this.rset, this);
+                var bg = this.game.add.sprite(0, 0, "gameover");
+
+                this.reset = this.game.add.button(this.game.world.centerX,445, "reset");
+                //this.reset.x = this.game.world.centerX - this.reset.width;
+                this.reset.scale.x = 2;
+                this.reset.scale.y = 2;
+                this.reset.onInputDown.add(this.rset, this);
+                //this.reset.alpha = 0;
+                
+                // the "game over"?
+                //it needs to fade out or something.
+                //this.game.add.tween(this.reset).to({alpha:1}, 2000, "Linear", true, 2000);
         }
         
         rset() {

@@ -21,6 +21,8 @@ namespace TSAGame {
             this.alive=false;
             this.animations.add("p",[0,1,2,3,4,5,6,7],30);
             this.animations.play("p");
+            this.scale.x = 0.5;
+            this.scale.y = 0.5;
      //       this.outOfCameraBoundsKill =true;
             
         }
