@@ -15,13 +15,14 @@ namespace TSAGame {
         sensors:any;
         shipLayer:any;
         instructions:Phaser.Sprite;
-
+        timer:any;
         siren:any;
         aliens:any;
         setOff:boolean;
         pause:Phaser.Button;
         resume:Phaser.Image;
         reset:Phaser.Image;
+        retry:Phaser.Button;
         blasts:any;
         prevSetoff:boolean;
         elevators:any;
@@ -57,7 +58,7 @@ namespace TSAGame {
             this.cryopod.body.collideWorldBounds = true;
             this.cryopod.body.gravity.y = 60;
             this.cryopod.body.immovable=true;
-            this.cryopod.animations.add("will", [1,1,1,1,1,1,1,1,1,1,1,3,4,5,6,7], 12);
+            this.cryopod.animations.add("will", [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,4,5,6,7], 12);
             this.tintI=this.game.add.image(0,0,"Laser");
             this.tintI.alpha=0;
             this.tintI.scale.x=100;
@@ -110,21 +111,25 @@ namespace TSAGame {
             this.bgMusic = this.game.add.audio("second", 0.6, true);
             this.bgMusic.play();
             this.siren=this.game.add.audio("alarm", 1, false);
-            this.pause=this.game.add.button(750,12,"pauseButton");
+            this.pause=this.game.add.button(700,12,"pauseButton");
             this.pause.fixedToCamera=true;
             this.pause.onInputDown.add(this.pauseGame,this);
             this.pause.scale.x=.5;
             this.pause.scale.y=.5;
-            this.instructions=this.game.add.sprite(0,0,"instructions");
+            this.instructions=this.game.add.sprite(0,0,"instructions_paused");
             this.instructions.alpha=0;
+            this.instructions.fixedToCamera=true;
             this.resume=this.game.add.image(50, 500,"resume");
-            this.resume.fixedToCamera=true;
+            this.resume.fixedToCamera=true;//
             this.resume.alpha=0;
             this.reset=this.game.add.image(400, 500,"reset");
             this.reset.fixedToCamera=true;
             this.reset.alpha=0;
             this.reset.scale.x = 2;
             this.reset.scale.y = 2;
+            this.retry=this.game.add.button(750,12,"retry");
+            this.retry.fixedToCamera=true;
+            this.retry.onInputDown.add(this.restart,this)
         }
         update(){
             this.game.physics.arcade.collide(this.player, this.shipLayer);
@@ -185,6 +190,9 @@ namespace TSAGame {
                  this.siren.play();
                  this.alarm.callAllExists("setOff",true);
                  this.tintI.alpha=0.1;
+                this.timer = this.game.time.create(true);
+                this.timer.add(5000, function pancake() {this.tintI.alpha = 0;}, this);
+                this.timer.start();
              }
             //this.elevators.setAll("playerX",this.player.x);
         //    this.elevators.setAll("playerY",this.player.bottom);
@@ -215,7 +223,6 @@ namespace TSAGame {
             this.Obots.callAllExists("updateLine",true,this.playerLine);
 
         }pauseUpdate(){
-            TSAGame.pauseU(this,this.resume,this.reset);
             this.instructions.alpha=1;
 
         }pauseGame(){
@@ -224,15 +231,20 @@ namespace TSAGame {
         alerted(player:any,Alien:any){
             Alien.triggered();
         }harm(player:any,blast:any){
-            if(player.shield===false){
+            if(!player.shield){
                 player.health-=50;
             }
             console.log(player.shield);
             blast.kill();
         }
             restart(){
-            if (window.confirm("Are you sure you want to restart this level?")){
-                this.game.state.start("level2");
-            }
+            this.pauseGame();
+            if (window.confirm("Are you sure you want to restart this level?")){  // I beat them. I got detected, but I still beat 'em.
+            this.game.sound.stopAll();
+            this.game.state.start("level2");}
+            var timer2 = this.game.time.create(true);
+            timer2.add(1, function pancake2() {this.game.paused = false;}, this);
+            timer2.start();
+        }
     }
-}}
+}

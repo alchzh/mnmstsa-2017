@@ -5,16 +5,16 @@ namespace TSAGame {
     export class Game extends Phaser.Game {
         constructor() {
             super(800, 600, Phaser.AUTO, "");
-            
+            console.log("whyyy");
             this.antialias = false;
             this.state.add("Boot", Boot, false);
             this.state.add("Preloader", Preloader, false);
-            this.state.add("Credits", Credits, false);  
+            this.state.add("Credits", Credits, false);
             this.state.add("level1", Level1, false);
             this.state.add("level2", Level2, false);
             this.state.add("level3", Level3, false);
             this.state.add("titleScreen", titleScreen, false);
-            this.state.add("select", LevelSelect, false);
+            this.state.add("LevelSelect", Preloader.LevelSelect, false);
             this.state.add("finalBoss", FinalBoss, false);
             this.state.add("playerDeath", PlayerDeath, false);
             this.state.start("Boot");
@@ -25,6 +25,18 @@ namespace TSAGame {
 
 let lgame;
 
-window.onload = () => {
-    lgame = new TSAGame.Game();
+let pause = () => {
+    if (window['lgame'].state.current.startsWith("level")) {
+        window['lgame'].paused = true;
+    }
 };
+
+window.onload = () => {
+    window['lgame'] = new TSAGame.Game();
+    
+    document.getElementById("content").onblur = pause;
+};
+
+document.onblur = pause;
+
+window.onblur = pause;

@@ -14,6 +14,7 @@ namespace TSAGame {
         pause:Phaser.Button;
         resume:Phaser.Image;
         reset:Phaser.Image;
+        retry:Phaser.Button;
         elevators:any;
         setOff:boolean;
         prevSetoff:boolean;
@@ -21,10 +22,11 @@ namespace TSAGame {
         alarm:any;
         tintI:Phaser.Image;
         playerLine:any;
+        blasts:any;
         instructions:any;
-        retry:any;
         tbots:any;
         sensors:any;
+        timer:any;
         
         create(){
             setUp(this,"lvl3");
@@ -49,13 +51,25 @@ namespace TSAGame {
 
             this.aliens=this.game.add.group();
             var alien=new Alien(this.game,10,128,320,this.shipLayer,this.aliens);
-                        
+            var alien2=new Alien(this.game,1330,128,1380,this.shipLayer,this.aliens);
+            var alien3=new Alien(this.game,1280,400,1330,this.shipLayer,this.aliens);
+
             this.tbots=this.game.add.group();
             let tbot=new TBot(this.game,872,384,1024,this.shipLayer,this.tbots,this.player);
-            let tbot2=new TBot(this.game,1408,160,1504,this.shipLayer,this.tbots,this.player);
+            let tbot2=new TBot(this.game,1430,160,1504,this.shipLayer,this.tbots,this.player);
 
             this.sensors=this.game.add.group();
+            let sensor=new Sensor(this.game,1408,264,448,"",0,this.shipLayer,this.sensors);
+            let sensor2=new Sensor(this.game,1280,264,448,"",2,this.shipLayer,this.sensors);
+            let sensor3=new Sensor(this.game,1408,328,512,"",0,this.shipLayer,this.sensors);
+            let sensor4=new Sensor(this.game,1280,328,512,"",2,this.shipLayer,this.sensors);
 
+
+            this.blasts= this.game.add.group();
+            for (let i = 0; i < 32; i++)
+            {
+                this.blasts.add(new Blast(this.game,0,0,this.shipLayer), true);
+            }
             this.button1=new Invis(this.game);
             this.button2=new Shield(this.game);
             this.bgMusic=this.game.add.audio("third", 0.6, true);
@@ -69,7 +83,7 @@ namespace TSAGame {
             this.instructions.alpha=0;
             this.instructions.fixedToCamera=true;
             this.resume=this.game.add.image(50, 500,"resume");
-            this.resume.fixedToCamera=true;
+            this.resume.fixedToCamera=true;//
             this.resume.alpha=0;
             this.reset=this.game.add.image(400, 500,"reset");
             this.reset.fixedToCamera=true;
@@ -78,8 +92,8 @@ namespace TSAGame {
             this.reset.scale.y = 2;
             this.retry=this.game.add.button(750,12,"retry");
             this.retry.fixedToCamera=true;
-            this.retry.onInputDown.add(this.restart,this);
-
+            this.retry.onInputDown.add(this.restart,this)
+            console.log("wtf");
         }
         update(){
             this.game.physics.arcade.collide(this.player, this.shipLayer);
@@ -106,10 +120,14 @@ namespace TSAGame {
                  this.siren.play();
                  this.alarm.callAllExists("setOff",true);
                  this.tintI.alpha=0.1;
+                this.timer = this.game.time.create(true);
+                this.timer.add(5000, function pancake() {this.tintI.alpha = 0;}, this);
+                this.timer.start();
              }
         //    this.game.physics.arcade.collide(this.tbots, this.shipLayer);
             this.resume.alpha=0;
             this.reset.alpha=0;
+            this.instructions.alpha = 0;
             let moveOn = this.game.physics.arcade.collide(this.player, this.level3End);
             if(moveOn){
                 console.log("congratulations, you have made it to the final boss!");
@@ -121,11 +139,20 @@ namespace TSAGame {
             }if(this.game.input.keyboard.isDown(Phaser.Keyboard.C)&&this.button1.visible){
                 this.button1.up();
             }
-            
-            this.elevators.setAll("playerX",this.player.x);
-            this.elevators.setAll("playerY",this.player.bottom);
+            this.aliens.setAll("playerX",this.player.right);
+            this.aliens.setAll("playerY",this.player.bottom);
+            this.tbots.setAll("playerX",this.player.x);
+            this.tbots.setAll("playerY",this.player.bottom);
+            this.tbots.setAll("player",this.player);
             this.Obots.setAll("playerX",this.player.x);
             this.Obots.setAll("playerY",this.player.bottom);
+            this.Obots.setAll("player",this.player);
+            this.elevators.setAll("playerX",this.player.x);
+            this.elevators.setAll("playerY",this.player.bottom);
+            this.elevators.setAll("Obots",this.Obots);
+            this.sensors.setAll("pl",this.playerLine);
+            this.sensors.setAll("blasts",this.blasts);
+            
             this.player.shield=this.button2.shield;
              this.player.invis=this.button1.invis;
              this.healthBar.scale.x=this.player.health*.125;
@@ -135,13 +162,19 @@ namespace TSAGame {
 
         }pauseUpdate(){
             TSAGame.pauseU(this,this.resume,this.reset);
+            this.instructions.alpha = 1;
 
         }pauseGame(){
             this.game.paused=true;
         }
-                restart(){
+        restart(){
+            this.pauseGame();
             if (window.confirm("Are you sure you want to restart this level?")){
-                this.game.state.start("level3");
-            }
+            this.game.sound.stopAll();
+            this.game.state.start("level3");}
+            var timer2 = this.game.time.create(true);
+            timer2.add(1, function pancake2() {this.game.paused = false;}, this);
+            timer2.start();
+        }
     }
-}}
+}

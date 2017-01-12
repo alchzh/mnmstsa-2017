@@ -72,6 +72,7 @@ namespace TSAGame {
 //            this.load.spritesheet("obot", "./assets/TankDroneThing2.png", 40, 61);
             this.load.audio("first", "./assets/sound/first.mp3");
             this.load.audio("second", "./assets/sound/OLIVER's song.mp3");
+            this.load.audio("game_over", "./assets/sound/deathScreen.mp3");
             this.load.audio("1", "./assets/sound/TheLevel1.mp3");
             this.load.audio("third", "./assets/sound/lel3.mp3");
 
@@ -81,24 +82,18 @@ namespace TSAGame {
             
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/TheHumanShip.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map2', 'assets/Tile maps/alienShip.json', null, Phaser.Tilemap.TILED_JSON);// 
-            this.load.tilemap('map3', 'assets/Tile maps/TheToBase.json', null, Phaser.Tilemap.TILED_JSON);// not level 1 ill look at the error
+            this.load.tilemap('map2', 'assets/Tile maps/alienShip.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map3', 'assets/Tile maps/TheTorBase.json', null, Phaser.Tilemap.TILED_JSON);
+          
         }
-// in the assets
+
         create() {
             
             this.add.tween(this.preloadBar).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true).onComplete.add(() => this.game.state.start("titleScreen", true, false));
-/*            var button = game.add.button(95, 95, 'button', down, this, 2, 1, 0);
-            button.onInputOver.add(over, this);
-            button.onInputOut.add(out, this);
-            button.onInputUp.add(up, this);*/
+
         }
         
-//        console.log("updating now");
-//        function over{}
-//        function out{}
-//        function down{}
-    
+
     }export class titleScreen extends Phaser.State {
         play:any;
         instructions:Phaser.Button;
@@ -109,17 +104,16 @@ namespace TSAGame {
             var bg = this.game.add.sprite(0, 0, "title");
         //    bg.scale.x=2;
         //    bg.scale.y=2;
-            this.play = this.game.add.button(this.game.world.centerX, 225, "play");
-            this.play.x = this.game.world.centerX - this.play.width / 2;
+            this.play = this.game.add.button(bg.width / 2, 225, "play");
+            this.play.x = bg.width / 2 - this.play.width / 2;
             this.play.onInputDown.add(this.playPress, this);
-            this.instructions = this.game.add.button(this.game.world.centerX, 350, "instruct");
-            this.instructions.x = this.game.world.centerX - this.instructions.width / 2;
+            this.instructions = this.game.add.button(bg.width / 2, 350, "instruct");
+            this.instructions.x = bg.width / 2 - this.instructions.width / 2;
             this.instructions.onInputDown.add(this.instruct, this);
             this.bgMusic=this.game.add.audio("first", 0.6, true);
             this.bgMusic.play();  
         }//it will be overrun by aliens and robots
         playPress(){
-            this.bgMusic.stop();
 
             this.game.state.start("select", true, false);
         }instruct(){
@@ -142,28 +136,35 @@ namespace TSAGame {
                 localStorage.setItem("clearedLevel", "0");
             }
             
-            this.reset = this.game.add.button(this.game.world.centerX,445, "reset");
-            this.reset.x -= this.reset.width;
+            this.reset = this.game.add.button(bg.width / 2, 445, "reset");
+            this.reset.x = bg.width / 2 - this.reset.width;
             this.reset.scale.x = 2;
             this.reset.scale.y = 2;
             this.reset.onInputDown.add(this.rset, this);
+            console.log(this.reset.x);
+            console.log(this.reset.y);
             
-            this.lvl1 = this.game.add.button(this.game.world.centerX - 210, 175, "level1");
-            this.lvl1.x = this.game.world.centerX - 210 - this.lvl1.width;
-            this.lvl1.scale.x = 2; // cool. There should be a sound effect, tho. I'll try to make one. Emphasis on try.
-            this.lvl1.scale.y = 2;//have you pressed z behind an alien yet? do it. lol
+            this.lvl1 = this.game.add.button(bg.width / 2 - 210, 175, "level1");
+            this.lvl1.x = bg.width / 2 - 210 - this.lvl1.width;
+            this.lvl1.scale.x = 2;
+            this.lvl1.scale.y = 2;
             this.lvl1.onInputDown.add(this.levl1, this);
-            //  ok
-            //dont play level3 for a while.
-            this.lvl2 = this.game.add.button(this.game.world.centerX, 175, "level2");
-            this.lvl2.x = this.game.world.centerX - this.lvl2.width;
+            console.log(this.lvl1.x);
+            console.log(this.lvl1.y);
+            
+            this.lvl2 = this.game.add.button(bg.width / 2, 175, "level2");
+            this.lvl2.x = bg.width / 2 - this.lvl2.width;
             this.lvl2.scale.x = 2;
             this.lvl2.scale.y = 2;
+            console.log(this.lvl2.x);
+            console.log(this.lvl2.y);
             
-            this.lvl3 = this.game.add.button(this.game.world.centerX + 210, 175, "level3");
-            this.lvl3.x = this.game.world.centerX + 210 - this.lvl3.width;
+            this.lvl3 = this.game.add.button(bg.width / 2 + 210, 175, "level3");
+            this.lvl3.x = bg.width / 2 + 210 - this.lvl3.width;
             this.lvl3.scale.x = 2;
             this.lvl3.scale.y = 2;
+            console.log(this.lvl3.x);
+            console.log(this.lvl3.y);
             
             var tint = 0x777777;
             
@@ -190,24 +191,28 @@ namespace TSAGame {
                 this.lvl3.onInputDown.add(this.levlLocked, this);
                 this.lvl3.tint = tint;
                 this.levelLock3=this.game.add.image(this.lvl3.x, this.lvl3.y, "lvlLock");
-                this.levelLock3.scale.x = 2;//tyler it was unable to decode your audio data...
+                this.levelLock3.scale.x = 2;
                 this.levelLock3.scale.y = 2;
             }
         }
         
         rset() {
-            this.game.state.start("titleScreen", true, false);
+            this.game.sound.stopAll();
+            this.game.state.start("Preloader", true, false);
         }
         
         levl1() {
+            this.game.sound.stopAll();
             this.game.state.start("level1", true, false);
         }
         
         levl2() {
+            this.game.sound.stopAll();
             this.game.state.start("level2", true, false);
         }
         
         levl3() {
+            this.game.sound.stopAll();
             this.game.state.start("level3", true, false);
         }
         
@@ -217,29 +222,47 @@ namespace TSAGame {
     }
     
     export class PlayerDeath extends Phaser.State {
-        reset:Phaser.Button;
-        text:any;
+        reset:any;
         timer:any;
+        bgMusic:any;
         
         create() {
+                        this.bgMusic=this.game.add.audio("game_over", 0.25, false);
+            this.bgMusic.play(); 
+            
                 var bg = this.game.add.sprite(0, 0, "gameover");
-
-                this.reset = this.game.add.button(this.game.world.centerX,445, "reset");
-                //this.reset.x = this.game.world.centerX - this.reset.width;
+                bg.alpha = 0;
+                this.reset = this.game.add.image(bg.width / 2,445, "reset");
+                this.reset.x = bg.width /2 - this.reset.width;
                 this.reset.scale.x = 2;
                 this.reset.scale.y = 2;
-                this.reset.onInputDown.add(this.rset, this);
-                //this.reset.alpha = 0;
+                console.log(this.reset.x);
+                this.reset.alpha = 0;
+                this.game.add.tween(bg).to({alpha:1}, 1000, "Linear", true, 0);
+                this.game.add.tween(this.reset).to({alpha:0.5}, 1100, "Linear", true, 1000);
+                this.timer = this.game.time.create(true);
+                this.timer.add(2100, function addInput() {
+                        this.reset.alpha = 0;
+                        this.reset = this.game.add.button(bg.width / 2,445, "reset");
+                        this.reset.x = bg.width /2 - this.reset.width;
+                        this.reset.scale.x = 2;
+                        this.reset.scale.y = 2;
+                        this.reset.alpha = 0.5;
+                        this.reset.onInputDown.add(this.rset, this);
+                        this.game.add.tween(this.reset).to({alpha:0.85}, 1100, "Linear", true, 0);
+                    }, this);
+                this.timer.start();
                 
-                // the "game over"?
-                //it needs to fade out or something.
-                //this.game.add.tween(this.reset).to({alpha:1}, 2000, "Linear", true, 2000);
+                this.timer = this.game.time.create(true);
+                this.timer.add(4000, function addInput() {this.game.add.tween(bg).to({alpha:0}, 3000, "Linear", true, 0);}, this);
+                this.timer.start();
+                
         }
         
         rset() {
+            this.game.sound.stopAll();
             this.game.state.start("titleScreen", true, false);
         }
-        
         levl1() {
             this.game.state.start("level1", true, false);
         }

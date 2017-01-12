@@ -181,7 +181,7 @@ namespace TSAGame {
             game.add.existing(this);
             this.fixedToCamera = true;
             this.invis = false;
-			this.animations.add('over', [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 0], 16);
+			this.animations.add('over', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 12,11,10,9,8,7,6,5,4,3,2,1,0], 16);
             this.onInputOver.add(this.over, this);
             this.onInputUp.add(this.up, this);
 //            this.onInputOut.add(this.out, this);
@@ -230,7 +230,7 @@ namespace TSAGame {
             this.onInputOver.add(this.over, this);
             this.onInputUp.add(this.up, this);
 //            this.onInputOut.add(this.out, this);
-            this.animations.add('over', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 0], 16);
+            this.animations.add('over', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 12,11,10,9,8,7,6,5,4,3,2,1,0], 16);
             this.time = game.time.create(false);
             this.avail = game.time.create(false);
         }
@@ -506,7 +506,7 @@ namespace TSAGame {
             
                     
                     }else{
-                    this.laser.setTo(this.x - 4, this.y+2,4800, this.y-2);
+                    this.laser.setTo(this.x - 4, this.y-1,4800, this.y+1);
                     var done=false;
                     var laserEnd=4800;
                     if(this.drones!=undefined){
@@ -532,7 +532,7 @@ namespace TSAGame {
                             laserEnd = tilehits[realTile].worldX;
                         }
                         else {
-                            laserEnd = 3200;
+                            laserEnd = 4800;
                         }
                     }
 //                    console.log(realTile);

@@ -35,8 +35,6 @@ namespace TSAGame {
         }
 
         public update() {
-            //--this.health;
-            
             
             if (this.health < 0)
             {

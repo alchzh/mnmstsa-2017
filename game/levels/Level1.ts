@@ -33,6 +33,7 @@ namespace TSAGame {
         eCryo:Phaser.Sprite;
         will:Phaser.Image;
         cryopod:Phaser.Sprite;
+        timer:any;
         
         create() {
             setUp(this, "sky");
@@ -117,7 +118,7 @@ namespace TSAGame {
             this.cryopod.body.collideWorldBounds = true;
             this.cryopod.body.gravity.y = 60;
             this.cryopod.body.immovable=true;
-            this.cryopod.animations.add("jayant", [1,1,1,1,1,1,1,1,1,1,1,3,4,5,6,7], 12);
+            this.cryopod.animations.add("jayant", [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,4,5,6,7], 12);
             this.pause=this.game.add.button(700,12,"pauseButton");
             this.pause.fixedToCamera=true;
             this.pause.onInputDown.add(this.pauseGame,this);
@@ -137,6 +138,7 @@ namespace TSAGame {
             this.retry=this.game.add.button(750,12,"retry");
             this.retry.fixedToCamera=true;
             this.retry.onInputDown.add(this.restart,this);
+            this.timer = 0;
         }
         
         update(){
@@ -164,11 +166,19 @@ namespace TSAGame {
 
             if(this.Obots.getAll("frame",20).length>0||this.drones.getAll("frame",9).length>0||this.sensors.getAll("triggered",true).length>0){
                 this.setOff=true;
-             }if(this.prevSetoff==false&&this.setOff==true){
-                 this.siren.play();
-                 this.alarm.callAllExists("setOff",true);
-                 this.tintI.alpha=0.1;
              }
+             
+             
+             
+             if(this.prevSetoff==false&&this.setOff==true){
+                this.siren.play();
+                this.alarm.callAllExists("setOff",true);
+                this.tintI.alpha=0.1;
+                this.timer = this.game.time.create(true);
+                this.timer.add(5000, function pancake() {this.tintI.alpha = 0;}, this);
+                    this.timer.start();
+             }
+             
             this.blasts.callAll("update2",null,this.player);
             if(this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)){
                 this.pauseGame();
@@ -176,8 +186,8 @@ namespace TSAGame {
                 this.button2.up();
             }if(this.game.input.keyboard.isDown(Phaser.Keyboard.C)&&this.button1.visible){
                 this.button1.up();
-            }
-            if(awake&&this.cryopod.frame==0)this.cryopod.animations.play("jayant");
+            }//what is this?
+            if(awake&&this.cryopod.frame==0&&true)this.cryopod.animations.play("jayant");
 
             //w this.elevators.callAllExists("update");
            // if(this.tbots.animations.frame>=14){
@@ -226,9 +236,10 @@ namespace TSAGame {
                 }
             }*/
            
-            if(this.game.input.keyboard.isDown(Phaser.Keyboard.B)){
+            if(this.game.input.keyboard.isDown(Phaser.Keyboard.ESC)){
                 this.game.paused = true;
             }
+            
     	    if(this.player.alpha==1){
     	        this.playerLine.setTo(this.player.left+11*this.player.scale.x,this.player.top,this.player.right-11*this.player.scale.x,this.player.bottom);
     	    }else{
@@ -239,20 +250,26 @@ namespace TSAGame {
            this.Obots.callAllExists("updateLine",true,this.playerLine);
   //          this.tbots.updateLine(this.playerLine,this.map,this.shipLayer);
         }pauseUpdate(){
-            console.log("Hi");
             this.instructions.alpha=1;
             TSAGame.pauseU(this,this.resume,this.reset);
         }pauseGame(){
             this.game.paused=true;
         }harm(player:any,blast:any){
+            if (!player.shield){
             player.health-=67;
+            }
             blast.kill();
         }
         restart(){
-            //if (window.confirm("Are you sure you want to restart this level?")){  // I beat them. I got detected, but I still beat 'em.
-                this.game.sound.stopAll();
-                this.game.state.start("level1");
-            //}
+            var preloadBar;
+            preloadBar = this.game.add.sprite(200,  250, "preloadBar");
+            this.pauseGame();
+            if (window.confirm("Are you sure you want to restart this level?")){  // I beat them. I got detected, but I still beat 'em.
+            this.game.sound.stopAll();
+            this.game.state.start("level1");}
+            var timer2 = this.game.time.create(true);
+            timer2.add(1, function pancake2() {this.game.paused = false;}, this);
+            timer2.start();
         }
         
     }
