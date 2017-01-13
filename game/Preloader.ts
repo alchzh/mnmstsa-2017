@@ -60,6 +60,8 @@ namespace TSAGame {
             this.load.image("gameover", "./assets/gamover.png");
             this.load.spritesheet("sensor", "./assets/Security Laser2.png",32,32);
 
+            this.load.image("done", "./assets/yayay.png");
+
             this.load.image("instruct", "./assets/instruct.png");
             this.load.image("instructions", "./assets/instruct1.png");
             this.load.image("instructions_paused", "./assets/pauseinstructions.png");
@@ -83,7 +85,7 @@ namespace TSAGame {
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/TheHumanShip.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map2', 'assets/Tile maps/alienShip.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map3', 'assets/Tile maps/TheTorBase.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map3', 'assets/Tile maps/TheToraxiaBase.json', null, Phaser.Tilemap.TILED_JSON);
           
         }
 
@@ -94,7 +96,15 @@ namespace TSAGame {
         }
         
 
-    }export class titleScreen extends Phaser.State {
+    }
+    export class Win extends Phaser.State {
+        create(){
+            let f=this.game.add.image(0,0,"done");
+            f.scale.x=2;
+            f.scale.y=2;
+        }
+    }
+    export class titleScreen extends Phaser.State {
         play:any;
         instructions:Phaser.Button;
         bgMusic:any;
@@ -112,16 +122,17 @@ namespace TSAGame {
             this.instructions.onInputDown.add(this.instruct, this);
             this.bgMusic=this.game.add.audio("first", 0.6, true);
             this.bgMusic.play();  
-        }//it will be overrun by aliens and robots
+        }
         playPress(){
 
-            this.game.state.start("select", true, false);
+            this.game.state.start("levelSelect", true, false);
         }instruct(){
             this.image = this.game.add.image(0, 0, "instructions");
             this.image.inputEnabled = true;
             this.image.events.onInputDown.add(() => this.image.destroy(), this);
         }
     }
+    
     export class LevelSelect extends Phaser.State {
         lvl1:Phaser.Button;
         lvl2:any;
@@ -135,6 +146,8 @@ namespace TSAGame {
             if (!parseInt(localStorage.getItem("clearedLevel"))) {
                 localStorage.setItem("clearedLevel", "0");
             }
+            
+            localStorage.setItem("clearedLevel", "2");
             
             this.reset = this.game.add.button(bg.width / 2, 445, "reset");
             this.reset.x = bg.width / 2 - this.reset.width;

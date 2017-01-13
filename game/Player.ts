@@ -40,10 +40,6 @@ namespace TSAGame {
             {
                 this.health = 0;
             }
-            if (this.health > 0 && this.health <200)
-            {
-                this.health += 0.02;
-            }
             else
             if(this.health<=0){
                 this.game.sound.stopAll();

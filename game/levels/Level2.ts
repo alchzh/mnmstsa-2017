@@ -89,6 +89,10 @@ namespace TSAGame {
             this.Obots=this.game.add.group();
             let obot = new Obot(this.game,850,64,950,this.Obots,this.shipLayer,this.player);
             
+            this.retry=this.game.add.button(750,12,"retry");
+            this.retry.fixedToCamera=true;
+            this.retry.onInputDown.add(this.restart,this)
+            
             this.sensors=this.game.add.group();
             let sensor=new Sensor(this.game,1152,192,1376,"",3,this.shipLayer,this.sensors);
             let sensor2=new Sensor(this.game,2304,256,416,"",0,this.shipLayer,this.sensors);
@@ -127,9 +131,6 @@ namespace TSAGame {
             this.reset.alpha=0;
             this.reset.scale.x = 2;
             this.reset.scale.y = 2;
-            this.retry=this.game.add.button(750,12,"retry");
-            this.retry.fixedToCamera=true;
-            this.retry.onInputDown.add(this.restart,this)
         }
         update(){
             this.game.physics.arcade.collide(this.player, this.shipLayer);
@@ -144,7 +145,7 @@ namespace TSAGame {
             this.game.physics.arcade.collide(this.shipLayer, this.cryopod);
             let awake = this.game.physics.arcade.collide(this.player, this.cryopod);
             this.game.physics.arcade.overlap(this.blasts, this.player,this.harm);
-
+            this.reset.alpha = 1;
             
             
             this.resume.alpha=0;
@@ -210,6 +211,12 @@ namespace TSAGame {
             this.sensors.setAll("drones",this.drones);
             this.sensors.setAll("pl",this.playerLine);
             this.sensors.setAll("blasts",this.blasts);
+            this.sensors.setAll("blasts",this.blasts);
+            this.drones.setAll("blasts",this.blasts);
+
+            this.Obots.setAll("blasts",this.blasts);
+            this.tbots.setAll("blasts",this.blasts);
+            this.aliens.setAll("blasts",this.blasts);
 
     	    this.prevSetoff=this.setOff;
             this.instructions.alpha=0;
@@ -226,6 +233,7 @@ namespace TSAGame {
             this.instructions.alpha=1;
 
         }pauseGame(){
+            
             this.game.paused=true;
         }
         alerted(player:any,Alien:any){

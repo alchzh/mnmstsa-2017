@@ -8,7 +8,6 @@ namespace TSAGame {
         map:any;
         shipLayer:any;
         playerLine: Phaser.Line;
-        boss: FBoss;
         level1end:Phaser.Sprite;
         ended:boolean;
         elevators:any;
@@ -99,7 +98,9 @@ namespace TSAGame {
             {
                 this.blasts.add(new Blast(this.game,0,0,this.shipLayer), true);
             }
-
+            this.retry=this.game.add.button(750,12,"retry");
+            this.retry.fixedToCamera=true;
+            this.retry.onInputDown.add(this.restart,this);
             this.setOff=false;
             this.prevSetoff=false;
             this.level1end = this.game.add.sprite(2900,300,"levelEnd");
@@ -135,9 +136,6 @@ namespace TSAGame {
             this.reset.alpha=0;
             this.reset.scale.x = 2;
             this.reset.scale.y = 2;
-            this.retry=this.game.add.button(750,12,"retry");
-            this.retry.fixedToCamera=true;
-            this.retry.onInputDown.add(this.restart,this);
             this.timer = 0;
         }
         
@@ -220,7 +218,9 @@ namespace TSAGame {
             this.Obots.setAll("playerX",this.player.x);
             this.Obots.setAll("playerY",this.player.bottom);
             this.Obots.setAll("player",this.player);
-
+            this.drones.setAll("blasts",this.blasts);
+            this.Obots.setAll("blasts",this.blasts);
+            
             this.elevators.setAll("Obots",this.Obots);
       /*      if(this.elevator.moving==true&&this.elevator.direction==-1){
                 if(this.elevator.left-this.Obots.left<=0&&this.elevator.right-this.Obots.right>=0&&this.Obots.direction==1){
@@ -253,10 +253,11 @@ namespace TSAGame {
             this.instructions.alpha=1;
             TSAGame.pauseU(this,this.resume,this.reset);
         }pauseGame(){
+            this.reset.alpha = 0;
             this.game.paused=true;
         }harm(player:any,blast:any){
             if (!player.shield){
-            player.health-=67;
+            player.health-=50;
             }
             blast.kill();
         }

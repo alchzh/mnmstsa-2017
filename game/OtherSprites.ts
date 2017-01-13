@@ -209,7 +209,7 @@ namespace TSAGame {
             this.exists = false;
             this.time.add(Phaser.Timer.SECOND * 2.5, this.finish, this);
 			this.time.start(0);
-            this.avail.add(Phaser.Timer.MINUTE, () => {
+            this.avail.add(Phaser.Timer.MINUTE * 0.5, () => {
                 this.visible = true;
                 this.exists = true;
                 if (this.animations.frame) this.animations.frame = 0;
@@ -253,7 +253,7 @@ namespace TSAGame {
             this.shield = true;
             this.time.add(Phaser.Timer.SECOND * 3, this.finish, this);
 			this.time.start(0);
-			this.avail.add(Phaser.Timer.MINUTE, () => {
+			this.avail.add(Phaser.Timer.MINUTE * .5, () => {
                 this.visible = true;
                 this.exists = true;
                 if (this.animations.frame) this.animations.frame = 0;
