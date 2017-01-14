@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <title>Evolution of manned and unmanned space vehicles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="Content-Type" charset='utf-8'>
+    <link rel="stylesheet" href="main.css">
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="shortcut icon" href="favicon.ico" />
+  </head>
+  <body class="helvetica contain">
+    <style>
+    	.h1{
+    		font-size: 5em;
+    		padding: 0;
+    		display: inline;
+    		color: white;
+    		text-align: center;
+    		margin-left: auto;
+    		margin-right: auto;
+    	}
+    	h3{
+    	  font-size: 3em;
+    	  margin: 0;
+    	  padding: 0;
+    	  color: white;
+    	  text-align: center;
+    	}
+    	#fp-nav ul li a span,
+      .fp-slidesNav ul li a span {
+        background: white;
+      }
+      .open .fp-controlArrow {
+        visibility: hidden;
+      }
+      .section .fp-tableCell {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+      .eam:hover {
+        background-image: url('files/apollo.jpg');
+        color: transparent;
+      }
+      .sputnik:hover {
+        background-image: url('files/sputnik.jpg');
+        color: transparent;
+      }
+      .juno:hover {
+        background-image: url('//upload.wikimedia.org/wikipedia/commons/5/51/Juno_Transparent.png');
+        color: transparent;
+      }
+      #section1 {
+        background-image: url('//upload.wikimedia.org/wikipedia/commons/e/e1/FullMoon2010.jpg');
+        background-color: black;
+      }
+      #section2 {
+        /*background-image: url('//upload.wikimedia.org/wikipedia/commons/2/2b/Jupiter_and_its_shrunken_Great_Red_Spot.jpg');*/
+        background-color: black;
+        background-repeat: no-repeat;
+      }
+    </style>
+    <div id="menu"></div>
+    <div id="fullpage">
+      <div class="section bg-black" id="title">
+        <div>
+          <p class="h1">Evolution of Manned and</p><br><p class="h1">Unmanned Space Vehicles</p><br>
+          <h3>Hover over boxes to see pictures</h3>
+        </div>
+      </div>
+      <div class="section" id="section1">
+        <div class="f3-l f5-m b w-40 white h-75 mr3 cover sputnik ba b--white">The first space vehicle launched was the Russian satellite Sputnik 1 in 1957, which was equipped with very little: only a bulb that emitted one of two radio frequencies at a time: 20.005 or 40.002 MHz, and it weighed 83.6 kg (184 lbs).<br><br>Sputnik 1 was followed by Sputnik 2 in the same year, which successfully carried the first animal in space, a dog named Laika.<br><br>Those two had collectively cost about 30 million RUB (about ½ million USD) at about 15 million RUB (¼ million USD) each.</div>
+        <div class="f3-l f5-m b w-40 white h-75 ml3 cover eam ba b--white">The first American satellite that was successfully launched was the Explorer 1 in 1958. It weighed 13.37 kg , with 8.3 kg being instrumentation. Project Mercury then became the first crewed US program, launching a total of 6 crewed missions. Neil Armstrong and Buzz Aldrin were the first humans to land on an extra-terrestrial ground on the Apollo 11 mission in 1969, the same decade that JFK accepted the challenge of “achieving the goal, before this decade is out, of landing a man on the moon and returning him safely to the Earth.” Apollo 11 weighed 45,702 kg (100,756 lbs) when it first launched, and cost 25.4 billion USD.</div>
+        <span class="bottom-0 white absolute right-0 f6">By Gregory H. Revera (Own work) [CC BY-SA 3.0 (http://creativecommons.org/licenses/by-sa/3.0) or GFDL (http://www.gnu.org/copyleft/fdl.html)], via Wikimedia Commons</span>
+      </div>
+      <div class="section contain bg-center" id="section2">
+        <div class="f3-l f5-m b w-40 white h-75 mr3 cover juno ba b--white">The most recent spacecraft with a cost of $1.13 billion USD was Juno, which was launched on August 5, 2011 and arrived July 4, 2016. It is equipped with Microwave Radiometer (MWR), a Jovian Infrared Auroral Mapper (JIRAM), a Magnetometer (MAG), a Gravity Science (GS), a Jovian Auroral Distributions Experiment (JADE), a Radio and Plasma Wave Sensor, an Ultraviolet Spectrograph (UVS), and a JunoCam (JCM). This list is notably longer than the list of instruments Sputnik 1 was equipped with. The Juno Mission is planned to take 6 years, with a 20 month science phase, and is supposed to orbit Jupiter to collect information.</div>
+        <div class="f3-l f5-m b w-40 white h-75 ml3 cover ba b--white">NASA plans to launch Asteroid Redirect Robotic Mission in 2021, the first robotic mission to visit a large asteroid near Earth, collect a multi-ton boulder from its surface, and redirect it into a stable orbit around the moon. Astronauts will then explore and take samples from it, with a planned return somewhere in the 2020s. This is a part of NASA’s plans for human space exploration. The spacecraft will use an enhanced gravity tractor to change the asteroid’s orbit after extracting a boulder from its surface. This mission is made possible by technological advancements in low-thrust mission design, solar electric propulsion, proximity operations and robotics.</div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $('#fullpage').fullpage({scrollHorizontally: true, css3: true, navigation: true});
+      });
+    </script>
+  </body>
+</html>
