@@ -173,7 +173,11 @@ namespace TSAGame {
                 this.alarm.callAllExists("setOff",true);
                 this.tintI.alpha=0.1;
                 this.timer = this.game.time.create(true);
-                this.timer.add(5000, function pancake() {this.tintI.alpha = 0;}, this);
+                this.timer.add(5000, function pancake() {
+                    this.tintI.alpha = 0;
+                    this.setOff=false;
+                    alarmsOn;
+                }, this);
                     this.timer.start();
              }
              
