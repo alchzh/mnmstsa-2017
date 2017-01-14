@@ -428,6 +428,7 @@ namespace TSAGame {
             this.prevX=this.x;
         }break(){
             this.deactivateS.play();
+            this.shutDown=true;
             this.animations.play("crash");
     	}
     }
@@ -640,6 +641,8 @@ namespace TSAGame {
                 this.previousTime = this.globalTime.seconds;
     	    }
     	    break(){
+                this.shutDown=true;
+
     	        this.deactivateS.play();
     	        this.animations.play("crash");
     	    }
@@ -761,7 +764,7 @@ namespace TSAGame {
                 this.nine+=1*dTime;
             }else{
                 this.nine=0;
-            }if(this.nine>=5){
+            }if(this.nine>=45){
                 if(this.blasts!=null){
                     this.nine=0;
                     this.blasts.getFirstDead().addIn(this.x+(24*this.scale.x), this.y,-this.scale.x,0,0);

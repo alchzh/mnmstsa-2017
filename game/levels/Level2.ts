@@ -58,7 +58,7 @@ namespace TSAGame {
             this.cryopod.body.collideWorldBounds = true;
             this.cryopod.body.gravity.y = 60;
             this.cryopod.body.immovable=true;
-            this.cryopod.animations.add("will", [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,4,5,6,7], 12);
+            this.cryopod.animations.add("will", [1,1,,1,8,9,10,11,12], 7);
             this.tintI=this.game.add.image(0,0,"Laser");
             this.tintI.alpha=0;
             this.tintI.scale.x=100;
@@ -192,7 +192,9 @@ namespace TSAGame {
                  this.alarm.callAllExists("setOff",true);
                  this.tintI.alpha=0.1;
                 this.timer = this.game.time.create(true);
-                this.timer.add(5000, function pancake() {this.tintI.alpha = 0;}, this);
+                this.timer.add(16000, function pancake() {this.tintI.alpha = 0;
+                    this.setOff=false;
+                    alarmsOn=false;}, this);
                 this.timer.start();
              }
             //this.elevators.setAll("playerX",this.player.x);
@@ -231,7 +233,7 @@ namespace TSAGame {
 
         }pauseUpdate(){
             this.instructions.alpha=1;
-
+            TSAGame.pauseU(this,this.resume,this.reset);
         }pauseGame(){
             
             this.game.paused=true;

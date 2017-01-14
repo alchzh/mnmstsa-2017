@@ -33,11 +33,10 @@ namespace TSAGame {
         
         create(){
             setUp(this,"lvl3");
-            // console.log("hi");
             this.player = new Player(this.game, 128, 0);
             this.game.camera.follow(this.player);
             this.game.world.resize(4800, 600);
-            console.log("hopefully this is the");
+            console.log("hopefully this is the last");
             this.playerLine = new Phaser.Line(this.player.left+11*this.player.scale.x,this.player.top,this.player.right-11*this.player.scale.x,this.player.bottom);
 
             this.map = this.add.tilemap("map3");
@@ -153,12 +152,13 @@ namespace TSAGame {
                 this.setOff=true;
                 TSAGame.alarmsOn=true;
              }if(this.prevSetoff==false&&this.setOff==true){
-                 console.log("hi");
                  this.siren.play();
                  this.alarm.callAllExists("setOff",true);
                  this.tintI.alpha=0.1;
                 this.timer = this.game.time.create(true);
-                this.timer.add(16000, function pancake() {this.tintI.alpha = 0;}, this);
+                this.timer.add(16000, function pancake() {this.tintI.alpha = 0;
+                    this.setOff=false;
+                    alarmsOn=false;}, this);
                 this.timer.start();
              }
         //    this.game.physics.arcade.collide(this.tbots, this.shipLayer);

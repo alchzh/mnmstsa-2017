@@ -72,8 +72,8 @@ namespace TSAGame {
             this.button1 = new Invis(this.game);
             this.button2 = new Shield(this.game);
             this.alarm=this.game.add.group();
-            let alarm=new Alarm(this.game,384,64,"siren",this.alarm);
-            let alarm2=new Alarm(this.game,288,64,"siren",this.alarm);
+            let alarm=new Alarm(this.game,384,128,"siren",this.alarm);
+            let alarm2=new Alarm(this.game,288,128,"siren",this.alarm);
             this.tintI=this.game.add.image(0,0,"Laser");
             this.tintI.alpha=0;
             this.eCryo=this.game.add.sprite(0,270,"cryopod");
@@ -173,10 +173,10 @@ namespace TSAGame {
                 this.alarm.callAllExists("setOff",true);
                 this.tintI.alpha=0.1;
                 this.timer = this.game.time.create(true);
-                this.timer.add(5000, function pancake() {
+                this.timer.add(16000, function pancake() {
                     this.tintI.alpha = 0;
                     this.setOff=false;
-                    alarmsOn;
+                    alarmsOn=false;
                 }, this);
                     this.timer.start();
              }

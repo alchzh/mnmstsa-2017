@@ -2,7 +2,7 @@ namespace TSAGame {
     export class Boot extends Phaser.State {
         
         preload() {
-            this.load.image("preloadBar", "./assets/loader.png");
+            this.load.image("preloadBar", "./assets/finalBar.png");
         }
         
         create() {
