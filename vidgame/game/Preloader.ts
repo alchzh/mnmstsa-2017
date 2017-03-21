@@ -147,7 +147,6 @@ namespace TSAGame {
                 localStorage.setItem("clearedLevel", "0");
             }
             
-            localStorage.setItem("clearedLevel", "2");
             
             this.reset = this.game.add.button(bg.width / 2, 445, "reset");
             this.reset.x = bg.width / 2 - this.reset.width;
