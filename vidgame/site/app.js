@@ -2763,7 +2763,7 @@ var TSAGame;
             this.load.image("chain", "./assets/Chain.png");
             this.load.image("instruct", "./assets/instruct.png");
             this.load.image("instructions", "./assets/Instructions (4).png");
-            this.load.image("instructions_paused", "./assets/Instructions (5).png");
+            this.load.image("instructions_paused", "./assets/instructionsexit.png");
             this.load.image("play", "./assets/play button.png");
             this.load.image("zee", "./assets/Z (1).png");
             this.load.spritesheet("cryopod", "./assets/cryopod.png", 25, 80);
