@@ -2784,7 +2784,7 @@ var TSAGame;
             this.load.audio("talknext", "./assets/sound/next.mp3");
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/Nova90.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map2', 'assets/Tile maps/4-6-17 Level2.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map3', 'assets/Tile maps/ActualAlienBase.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
         };
@@ -3327,7 +3327,7 @@ var TSAGame;
             this.cryopod.animations.add("jayant", [1, 2, 3, 4, 5, 6, 7], 12);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Dont Press [z] to continue] ", "ehead", "Ethan", 1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue] ", "ehead", "Ethan", 1);
             this.pause = this.game.add.button(700, 12, "pauseButton");
             this.pause.fixedToCamera = true;
             this.pause.onInputDown.add(this.pauseGame, this);
@@ -4198,7 +4198,7 @@ var TSAGame;
                     this.talky2.talk("Hopefully.", "jhead", "Janet", 0);
                     break;
                 case 17:
-                    this.talky2.talk("It seems like they use those crystals a lot.", "jhead", "Janet", 0);
+                    this.talky2.talk("It seems like they use those crystals \na lot.", "jhead", "Janet", 0);
                     break;
                 case 18:
                     this.talky2.talk("Ugh, this is so boring. All we are doing \nis just standing here waiting for the \nmachine to find new info from this human", "sciHead", " ??? ", 19);
@@ -4257,7 +4257,7 @@ var TSAGame;
                     this.talky2.talk("Well I pretty much have to. But hopefully \nyou can help me from in here.", "ehead", "Ethan", 46);
                     break;
                 case 46:
-                    this.talky2.talk("If thats what you want, I will stay here. \nGoodluck rescuing James.", "whead", "Will", 0);
+                    this.talky2.talk("If that's what you want, I will stay here. \nGoodluck rescuing James.", "whead", "Will", 0);
                     break;
                 case 404:
                     if (this.order != 6) {

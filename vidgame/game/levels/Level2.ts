@@ -572,7 +572,7 @@ namespace TSAGame {
                 this.talky2.talk("Hopefully.","jhead","Janet",0);
                 break;
             case 17:
-                this.talky2.talk("It seems like they use those crystals a lot.","jhead","Janet",0);
+                this.talky2.talk("It seems like they use those crystals \na lot.","jhead","Janet",0);
                 break;
             case 18:
                 this.talky2.talk("Ugh, this is so boring. All we are doing \nis just standing here waiting for the \nmachine to find new info from this human","sciHead"," ??? ",19);
@@ -632,7 +632,7 @@ namespace TSAGame {
                 this.talky2.talk("Well I pretty much have to. But hopefully \nyou can help me from in here.","ehead","Ethan",46);
                 break; 
                 case 46:
-                this.talky2.talk("If thats what you want, I will stay here. \nGoodluck rescuing James.","whead","Will",0);
+                this.talky2.talk("If that's what you want, I will stay here. \nGoodluck rescuing James.","whead","Will",0);
                 break; 
             case 404:
                 if(this.order!=6){

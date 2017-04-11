@@ -129,7 +129,7 @@ namespace TSAGame {
 
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/Nova90.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map2', 'assets/Tile maps/4-6-17 Level2.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map3', 'assets/Tile maps/ActualAlienBase.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
 
