@@ -3327,7 +3327,7 @@ var TSAGame;
             this.cryopod.animations.add("jayant", [1, 2, 3, 4, 5, 6, 7], 12);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Dont Press [z] to continue]lle ", "ehead", "Ethan", 1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Dont Press [z] to continue] ", "ehead", "Ethan", 1);
             this.pause = this.game.add.button(700, 12, "pauseButton");
             this.pause.fixedToCamera = true;
             this.pause.onInputDown.add(this.pauseGame, this);
