@@ -1226,7 +1226,7 @@ namespace TSAGame {
            this.boom = this.game.add.audio("cannon", 0.25, false);
        }
        update(){
-           if(this.Awaken){
+           if(this.Awaken&&this.left<this.game.camera.x+800&&this.right>this.game.camera.x){
                 this.angle=1.57+this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
                 if(this.angel<3.14&&this.angel>-3.14){
                     this.animations.play("awaken");
@@ -1241,10 +1241,10 @@ namespace TSAGame {
            }
            if(this.barrel.alpha==1){
                this.angel=1.57+this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
-               if(this.angel>1.57){
-                   this.rotation=1.57;
-               }else if(this.angel<-1.57){
-                   this.rotation=-1.57;
+               if(this.angel>1.57+this.rotatoin){
+                   this.rotation=1.57+this.rotatoin;
+               }else if(this.angel<-1.57+this.rotatoin){
+                   this.rotation=-1.57+this.rotatoin;
                }else{
                 this.rotation=this.angel;
                }

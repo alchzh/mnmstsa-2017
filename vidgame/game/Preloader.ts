@@ -39,10 +39,10 @@ namespace TSAGame {
             this.load.image("arrow", "./assets/Arrow-.png");
             this.load.image("blast2", "./assets/blast34.png");
             this.load.image("sciStar", "./assets/ScienceStar.png");
-            this.load.image("cutscene-a","./assets/cutcece.png");
+            this.load.image("cutscene-a","./assets/cutcece (1).png");
             this.load.image("cutscenez","./assets/Cutscene Icon-1.png");
-            this.load.image("cutscene-b","./assets/cutscennenecnene2.png");
-            this.load.image("cutscene-c","./assets/Cutscenen3.png");
+            this.load.image("cutscene-b","./assets/Cutscene2.png");
+            this.load.image("cutscene-c","./assets/Cutscene3.png");
            this.load.image("cutscene-d","./assets/Cutscene4 (1).png");
             this.load.image("cutscene-e","./assets/cutscene5.png");
             this.load.image("cutscene-f","./assets/cutscene6 (1).png");
@@ -105,8 +105,8 @@ namespace TSAGame {
             this.load.image("chain", "./assets/Chain.png");
 
             this.load.image("instruct", "./assets/instruct.png");
-            this.load.image("instructions", "./assets/instruct1.png");
-            this.load.image("instructions_paused", "./assets/pauseinstructions.png");
+            this.load.image("instructions", "./assets/Instructions (4).png");
+            this.load.image("instructions_paused", "./assets/Instructions (5).png");
             this.load.image("play", "./assets/play button.png");
             this.load.image("zee", "./assets/Z (1).png");
             this.load.spritesheet("cryopod", "./assets/cryopod.png", 25, 80);
@@ -325,21 +325,21 @@ namespace TSAGame {
             this.reset.onInputDown.add(this.finish, this);
             //timerception
             this.timer = this.game.time.create(true);
-            this.timer.add(Phaser.Timer.SECOND * 6, function addInput() {
+            this.timer.add(Phaser.Timer.SECOND * 11, function addInput() {
                 this.game.add.tween(this.img2).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
                 this.timer = this.game.time.create(true);
-                this.timer.add(Phaser.Timer.SECOND * 3, function addInput() {
+                this.timer.add(Phaser.Timer.SECOND * 11.5, function addInput() {
                     this.game.add.tween(this.img3).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
                     this.timer = this.game.time.create(true);
-                    this.timer.add(Phaser.Timer.SECOND * 3, function addInput() {
+                    this.timer.add(Phaser.Timer.SECOND * 6, function addInput() {
                             this.game.add.tween(this.img4).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
                             this.timer = this.game.time.create(true);
-                            this.timer.add(Phaser.Timer.SECOND * 3, function addInput() {
+                            this.timer.add(Phaser.Timer.SECOND * 11, function addInput() {
                                 this.game.add.tween(this.img5).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
                                 this.timer = this.game.time.create(true);
-                                this.timer.add(Phaser.Timer.SECOND * 3, function addInput() {this.game.add.tween(this.img6).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
+                                this.timer.add(Phaser.Timer.SECOND * 14, function addInput() {this.game.add.tween(this.img6).to({alpha:1}, Phaser.Timer.SECOND, "Linear", true, 0);
                                 this.timer = this.game.time.create(true);
-                                this.timer.add(Phaser.Timer.SECOND * 3, function addInput() {
+                                this.timer.add(Phaser.Timer.SECOND * 15, function addInput() {
                                     this.img1.visible = false;
                                     this.img2.visible = false;
                                     this.img3.visible = false;
@@ -476,7 +476,6 @@ namespace TSAGame {
                         this.retry.scale.y = 2;
                         this.retry.alpha = 0.5;
                         this.retry.tint = 0xCCCCCC;
-                        console.log(levelOn);
                         this.retry.onInputDown.add(this.resett, this);
                         this.game.add.tween(this.retry).to({alpha:0.8}, Phaser.Timer.SECOND, "Linear", true, 0);
                     }, this);
@@ -487,7 +486,6 @@ namespace TSAGame {
                 this.timer.start();
                 
         }resett(){
-            console.log(levelOn+"ho ho ho");
             if(levelOn==1){
                 this.levl1();
             }else if(levelOn==2){

@@ -66,7 +66,7 @@ namespace TSAGame {
             this.game.camera.bounds.bottom=600;
             this.player = new Player(this.game,60, 98);
             this.game.camera.follow(this.player);
-            this.game.world.resize(3200, 608);
+            this.game.world.resize(3200, 600);
             this.sfdestrt = true;
             this.alarm=this.game.add.group();
             let alarm=new Alarm(this.game,512,64,"siren",this.alarm,90);
@@ -171,7 +171,7 @@ namespace TSAGame {
             this.cryopod.animations.add("jayant", [1,2,3,4,5,6,7], 12);
             this.talky1=new DialogueBoxCasual(this.game);
             this.talky2=new DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Dont Press [z] to continue] ","ehead","Ethan",1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Dont Press [z] to continue]lle ","ehead","Ethan",1);
 
             this.pause=this.game.add.button(700,12,"pauseButton");
             this.pause.fixedToCamera=true;
