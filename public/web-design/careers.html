@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <title> </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" http-equiv="Content-Type" charset='utf-8'>
+    <link rel="stylesheet" href="main.css">
+    <script type="text/javascript" src="app.js"></script>
+    <link rel="shortcut icon" href="favicon.ico" />
+  </head>
+  <body class="helvetica cover careers bg-center">
+    <style>
+    	h1{
+    		font-size: 5em;
+    		padding: 0;
+    		display: inline;
+    	}
+    	h3{
+    	  font-size: 3em;
+    	  margin: 0;
+    	  padding: 0;
+    	}
+    	.slide p{
+    	  font-size: 1em;
+    	  margin: 0;
+    	  margin-left: auto;
+    	  margin-right: auto;
+    	  max-width: 75%;
+    	  font-weight: bold;
+    	  padding: 0;
+    	}
+    	#fp-nav ul li a span,
+      .fp-slidesNav ul li a span {
+        background: white;
+      }
+      .career {
+        background-color: rgba(255, 255, 255, 0.69);
+        display: inline-block;
+        width: 100%;
+        padding: 3em 0 3em;
+      }
+      .open .fp-controlArrow {
+        visibility: hidden;
+      }
+    </style>
+    <div id="menu"></div>
+      <div id="fullpage">
+      <div class="section tc">
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Careers in Aeronautics</h1>
+            <h3>(Click arrows to see the careers)</h3>
+          </div>
+        </div>
+        
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Aerospace Engineer</h1>
+              <p><i>Median salary: $107,830 USD anually</i></p>
+              <br>
+              <p>An aerospace engineer is someone who works with the specifications of civil and military aircraft. After such aircraft are tested the aerospace engineer tweaks those specifications with the intent to get as much out of the aircraft as possible. Aeroespacial engineering accounts for a large portion of positions within NASA. People in such a career position have to be skilled in the fields of physics and mathematics.</p>
+          </div>
+        </div>
+        
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Meteorologist</h1>
+              <p><i>Median salary: $89,820 USD anually</i></p>
+              <br>
+              <p>A meteorologist is a scientist in the field of meteorology, or the study of the weather. Meteorologists study weather patterns to help them predict future weather. Those wishing to go into the field of meteorology generally study mathematics, physics, chemistry, and computer sciences. Meteorology is important to space exploration because weather is a big factor in spacecraft launches and landings.</p>
+          </div>
+        </div>
+        
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Pilot</h1>
+              <p><i>Salary: $65,140–$100,701 anually, depending on Federal Government's General Schedule pay scale</i></p>
+              <br>
+              <p>(Astronaut) pilots are people who fly spacecraft. They assist the commander, who is responsible for the crew, vehicle, success of the mission, and safety. Pilots help control and operate the space vehicle. In general, pilots have good sight, spacial reasoning skills, and fast reaction times as to not crash the craft they are piloting. Some other requirements (for NASA) are: a Bachelor's degree in engineering, biological science, physical sciences, and/or mathematics, at least 1000 hours piloting in command in a jet, as well as physical requirements.</p>
+          </div>
+        </div>
+        
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Mission Specialist</h1>
+              <p><i>Salary: $65,140–$100,701 anually, depending on Federal Government's General Schedule pay scale</i></p>
+              <br>
+              <p>Mission specialist astronauts are responsible for organizing operations in the Shuttle (e.g. planning for crew activity, resource usage, and experiment and payload operations). They have to have thorough knowledge of the Shuttle, mission objectives, and equipment for payload on their missions. Mission specialists also carry out EVAs (extravehicular activities) and spacewalks. Some requirements for being a Mission specialist astronaut are: a bachelor's degree in engineering, biological science, physical science, and/or mathematics, followed by professional experience, and physical requirements.</p>
+          </div>
+        </div>
+        
+        <div class="slide dark-blue">
+          <div class="career">
+            <h1>Payload Specialist</h1>
+              <p><i>Salary: $65,140–$100,701 anually, depending on Federal Government's General Schedule pay scale</i></p>
+              <br>
+              <p>Payload specialists are people who can be on a spacecraft without being a NASA astronaut. They are generally trained to handle a specific type of payload on a spacecraft, such as scientific instruments that require training. Payload specialists do not have to be NASA astronauts and don’t even have to be U.S. citizens, although they are required to undergo rigorous NASA training.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function() {
+        $('#fullpage').fullpage({scrollHorizontally: true, css3: true, slidesNavigation: true});
+      });
+    </script>
+    <span class="bottom-0 absolute right-0 white f5">Image credit: NASA</span>
+  </body>
+</html>
