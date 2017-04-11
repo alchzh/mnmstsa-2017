@@ -1,4 +1,4 @@
-namespace TSAGame {
+/*namespace TSAGame {
     export class FinalBoss extends Phaser.State{
         player: TSAGame.Player;
         gameEnd:Phaser.Sprite;
@@ -36,4 +36,4 @@ namespace TSAGame {
 
         }
     }
-}
+}*/

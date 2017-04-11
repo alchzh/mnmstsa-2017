@@ -1,8 +1,5 @@
 namespace TSAGame {
     
-    export class bullet extends Phaser.Sprite {
-        
-    }
     
     export class Blast extends Phaser.Sprite {
         player:Player;
@@ -19,7 +16,7 @@ namespace TSAGame {
             this.exists = false;
             this.layer=layer;
             this.alive=false;
-            this.animations.add("p",[0,1,2,3,4,5,6,7],30);
+            this.animations.add("p",[0,1,2,3],8);
             this.animations.play("p");
             this.scale.x = 0.5;
             this.scale.y = 0.5;
@@ -45,16 +42,46 @@ namespace TSAGame {
          //       player.health-=50;
           //  }
         }
-        addIn(x:number,y:number,xVelMultiplier:number,yVelMultiplier:number,rotation:number){
+        addIn(x:number,y:number,xVelMultiplier:number,yVelMultiplier:number,rotation:number,type="blast"){
+            
             this.reset(x, y);
-                        
+            if(this.key!==type)this.loadTexture(type);            
             this.game.physics.arcade.enable(this);
             this.autoCull =true;
-            console.log(x, y);
-            this.rotation=rotation*Math.PI/2+1.57;
+            this.angle=rotation+90;
             this.body.velocity.y=650*yVelMultiplier;
             this.body.velocity.x=550*xVelMultiplier;
 
         }
+    }    
+    export class ScienceStar extends Phaser.Sprite {
+        attached:boolean;
+        layer:any;
+        crash:boolean;
+        
+        constructor(game:Phaser.Game,x:number,y:number,layer:any){
+            super(game,x,y,"sciStar");
+            this.attached=true;
+            this.layer=layer;
+            this.crash=false;
+            
+        }update(){
+            this.crash = this.game.physics.arcade.collide(this, this.layer);
+            this.alpha=1;
+            if(this.crash){
+                this.attached=true;
+            }
+            if(this.attached){
+                this.alpha=0;
+                this.body.gravity.y=0;
+                this.body.velocity.y=0;
+            }
+        }launch(yvel:number,y:number,gravity:number){
+            this.body.velocity.x=yvel;
+            this.body.velocity.y-=20;
+            this.body.gravity.y=gravity;
+            this.y=y;
+        }
     }
+
 }
