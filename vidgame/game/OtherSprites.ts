@@ -1226,10 +1226,16 @@ namespace TSAGame {
            this.boom = this.game.add.audio("cannon", 0.25, false);
        }
        update(){
-           if(this.Awaken&&this.left<this.game.camera.x+800&&this.right>this.game.camera.x){
-                this.angle=1.57+this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
-                if(this.angel<3.14&&this.angel>-3.14){
-                    this.animations.play("awaken");
+           if(this.Awaken){
+               if(this.left<this.game.camera.x+800&&this.right>this.game.camera.x){
+               
+                    this.angel=1.57+this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
+                    if(this.angel<1.57+this.rotatoin&&this.angel>-1.57+this.rotatoin){
+                        this.animations.play("awaken");
+                    }
+               }
+                else{
+                    this.Awaken=false;
                 }
            }
            if(this.frame==7&&this.Awaken){
@@ -1250,7 +1256,7 @@ namespace TSAGame {
                }
            }if(this.frame==0)this.rotation=this.rotatoin;
            if(this.frame==10)this.boom.play();
-
+            if(this.animations.currentAnim.name=="awaken")this.rotation=this.rotatoin;
            if(this.frame==17)this.Fire();
        }
        ChillBruh(){

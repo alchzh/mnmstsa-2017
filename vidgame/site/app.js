@@ -2275,10 +2275,15 @@ var TSAGame;
             return _this;
         }
         Cannon.prototype.update = function () {
-            if (this.Awaken && this.left < this.game.camera.x + 800 && this.right > this.game.camera.x) {
-                this.angle = 1.57 + this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
-                if (this.angel < 3.14 && this.angel > -3.14) {
-                    this.animations.play("awaken");
+            if (this.Awaken) {
+                if (this.left < this.game.camera.x + 800 && this.right > this.game.camera.x) {
+                    this.angel = 1.57 + this.game.physics.arcade.angleToXY(this, this.player.x, this.player.y);
+                    if (this.angel < 1.57 + this.rotatoin && this.angel > -1.57 + this.rotatoin) {
+                        this.animations.play("awaken");
+                    }
+                }
+                else {
+                    this.Awaken = false;
                 }
             }
             if (this.frame == 7 && this.Awaken) {
@@ -2304,6 +2309,8 @@ var TSAGame;
                 this.rotation = this.rotatoin;
             if (this.frame == 10)
                 this.boom.play();
+            if (this.animations.currentAnim.name == "awaken")
+                this.rotation = this.rotatoin;
             if (this.frame == 17)
                 this.Fire();
         };
@@ -2723,6 +2730,7 @@ var TSAGame;
             this.load.image("jayant", "./assets/Jeanette Saved.png");
             this.load.image("jaems", "./assets/James.png");
             this.load.image("talky box", "./assets/the talky box.png");
+            console.log("jtr");
             this.load.image("ehead", "./assets/EthanHead.png");
             this.load.image("sciHead", "./assets/sciHead.png");
             this.load.image("whead", "./assets/Wills Head.png");
@@ -2738,7 +2746,7 @@ var TSAGame;
             this.load.image("?button", "./assets/mystery button.png");
             this.load.image("Ship Tileset", "./assets/Tile Sets/coolest most bestest tileset.png");
             this.load.image("Ship2 Tileset", "./assets/Tile Sets/State level2.png");
-            this.load.image("Level 3 tileset", "./assets/Tile Sets/worst tileset.png");
+            this.load.image("Level 3 tileset", "./assets/Tile Sets/BaseTileset-1 (2).png");
             this.load.image("pauseButton", "./assets/pause.png");
             this.load.image("resume", "./assets/resume.png");
             this.load.image("reset", "./assets/main menu button.png");
@@ -2785,7 +2793,7 @@ var TSAGame;
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/Nova90.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map3', 'assets/Tile maps/ActualAlienBase.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map3', 'assets/Tile maps/ugh.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
         };
         Preloader.prototype.create = function () {
@@ -3271,8 +3279,6 @@ var TSAGame;
             this.tintI = this.game.add.image(0, 0, "Laser");
             this.tintI.alpha = 0;
             this.cannons = this.game.add.group();
-            var c0 = new TSAGame.Cannon(this.game, 192, 384, 0, this.shipLayer, this.cannons);
-            var c1 = new TSAGame.Cannon(this.game, 496, 492, 2, this.shipLayer, this.cannons);
             var c2 = new TSAGame.Cannon(this.game, 1548, 207, 1, this.shipLayer, this.cannons);
             var c3 = new TSAGame.Cannon(this.game, 1620, 428, 3, this.shipLayer, this.cannons);
             var c4 = new TSAGame.Cannon(this.game, 2512, 396, 2, this.shipLayer, this.cannons);
@@ -3327,7 +3333,7 @@ var TSAGame;
             this.cryopod.animations.add("jayant", [1, 2, 3, 4, 5, 6, 7], 12);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue] ", "ehead", "Ethan", 1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue]] ", "ehead", "Ethan", 1);
             this.pause = this.game.add.button(700, 12, "pauseButton");
             this.pause.fixedToCamera = true;
             this.pause.onInputDown.add(this.pauseGame, this);
@@ -3553,9 +3559,6 @@ var TSAGame;
             if (this.shake) {
                 this.setOff = true;
                 this.game.camera.shake(0.0025, 50);
-            }
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.J)) {
-                this.game.camera.shake(0.002, 5000);
             }
             this.sensors.setAll("drones", this.drones);
             this.sensors.setAll("pl", this.playerLine);
@@ -3815,7 +3818,7 @@ var TSAGame;
             var alien3 = new TSAGame.Alien(this.game, 2846, 320, 3136, this.shipLayer, this.aliens, [12]);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow. This is quite different.jk it ", "ehead", "Ethan", 1);
+            this.talky2.talk("Wow. This is quite different. ;;;;;", "ehead", "Ethan", 1);
             this.button1 = new TSAGame.Invis(this.game);
             this.button2 = new TSAGame.Shield(this.game);
             this.bgMusic = this.game.add.audio("second", 0.6, true);
@@ -3878,19 +3881,25 @@ var TSAGame;
                         this.order = 69;
                     }
                 }
-                else {
+                else if (this.Aldis.alive) {
                     if (this.order == 69) {
                         this.order += 1;
                         this.talky2.talk("Well that didn't do much. I got the \naliens to come in here but one already \nwent back.", "ehead", "Ethan", 26);
                     }
-                    if (this.game.physics.arcade.collide(this.player, this.comp2) && this.Aldis.x < 4200) {
+                    if (this.game.physics.arcade.collide(this.player, this.comp2)) {
+                        this.player.x -= 10;
                         this.talky2.talk("All right I'm entering the username \nand password you gave me.", "ehead", "Ethan", 30);
+                    }
+                    if (this.Aldis.body.velocity.x < -10 && this.Aldis.x <= 4270) {
+                        this.Aldis.kill();
+                        this.order += 1;
+                        this.talky2.talk("Hey that actually worked! I should \nprobably go on that elevator up there \nand leave.", "ehead", "Ethan", 0);
                     }
                 }
                 if (this.game.physics.arcade.collide(this.player, this.comp1) && this.Aldis.x < 4200) {
                     this.talky2.talk("Well there is the off switch. I just \nhave to press it...", "ehead", "Ethan", 9000);
                 }
-                if (this.player.bottom < 64) {
+                if (this.player.bottom < 64 && this.order == 71) {
                     this.goodbye();
                 }
             }
@@ -3901,13 +3910,13 @@ var TSAGame;
                     this.cryopod.animations.play("will");
                 console.log("frame: " + this.cryopod.frame + " order: " + this.order);
                 if (this.cryopod.frame == 12) {
-                    if (this.order == 70) {
+                    if (this.order == 71) {
                         this.talky2.talk("What the- this looks nothing like our \nship, or where we put our cryopods.", "whead", "Will", 40);
                         this.order += 1;
                     }
                 }
                 if (this.game.physics.arcade.collide(this.player, this.level2End)) {
-                    if (this.order == 71) {
+                    if (this.order == 72) {
                         this.bgMusic.stop();
                         if (parseInt(localStorage.getItem("clearedLevel")) < 2) {
                             localStorage.setItem("clearedLevel", "2");
@@ -3962,7 +3971,7 @@ var TSAGame;
             else if (this.order == 4) {
                 if (this.player.x >= 3296) {
                     this.order += 1;
-                    this.talky1.talk("I'm near the end of the ship, I should see will soon.", "ehead", "Ethan", 2);
+                    this.talky1.talk("I'm near the end of the ship, I should \nsee will soon.", "ehead", "Ethan", 2);
                 }
             }
             else if (this.order == 5) {
@@ -4123,7 +4132,7 @@ var TSAGame;
             this.comp2.scale.x = -1;
             this.duckBot = this.game.add.group();
             var duck1 = this.game.add.sprite(4448, 328, "duckbot");
-            var elevator = new TSAGame.Elevator(this.game, 4896, 64, 0, this.elevators, 1, "alienElevator");
+            var elevator = new TSAGame.Elevator(this.game, 4896, 45, 0, this.elevators, 1, "alienElevator");
             this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.", "ehead", "Ethan", 0);
         };
         Level2.prototype.shutDown = function () {
@@ -4219,7 +4228,7 @@ var TSAGame;
                     this.talky2.talk("Well if it was that human then I will \nfind it.", "sciHead", "Aldis", 24);
                     break;
                 case 24:
-                    this.talky2.talk("Do whatever you want but I'm leaving.", "sciHead", "Aldis", 25);
+                    this.talky2.talk("Do whatever you want but I'm leaving.", "sciHead", "Boril", 25);
                     break;
                 case 25:
                     this.boril.body.velocity.x = -80;
@@ -4236,7 +4245,37 @@ var TSAGame;
                     this.talky2.talk("I think that is the leaders name! I bet I \ncan do a lot if I access that account!!\nJust need to find that computer...", "ehead", "Ethan", 0);
                     break;
                 case 30:
-                    this.talky2.talk("Oh my I can do so much! This is \nincredible. Now I can definitely get rid \nof that Toraxian!", "ehead", "Ethan", 0);
+                    this.talky2.talk("Oh my I can do so much! This is \nincredible. Now I can definitely get rid \nof that Toraxian!", "ehead", "Ethan", 31);
+                    break;
+                case 31:
+                    this.talky2.talk("It looks like I can even overheat the \nengines in this ship...", "ehead", "Ethan", 32);
+                    break;
+                case 32:
+                    this.talky2.talk("You can do what-", "jhead", "Janet", 33);
+                    break;
+                case 33:
+                    this.game.camera.shake(0.004, 1000);
+                    var extimer = this.game.time.create(true);
+                    extimer.add(1200, function pancake() { this.talky2.talk("What just happened?!?!", "sciHead", "Aldis", 34); }, this);
+                    extimer.start();
+                    break;
+                case 34:
+                    this.talky2.talk("Well aldis, that last human just \noverheated the engine which caused it to \nexplode", "sciHead", "Boril", 35);
+                    break;
+                case 35:
+                    this.talky2.talk("Uhh, general Zelek we have a problem up \nhere.", "sciHead", "Aldis", 36);
+                    break;
+                case 36:
+                    this.talky2.talk("Yes, I can see what happened from the \nbase. We need everyone to evacuate now.", "?hed", "Zelek", 37);
+                    break;
+                case 37:
+                    this.talky2.talk("Well the engine he destroyed can't harm \nanyone.", "sciHead", "Aldis", 38);
+                    break;
+                case 38:
+                    this.talky2.talk("If he destroys the other one the ship \nwill crash on Torax.", "?hed", "Zelek", 39);
+                    break;
+                case 39:
+                    this.talky2.talk("Ok fine.", "sciHead", "Aldis", 100);
                     break;
                 case 40:
                     this.talky2.talk("Well our cryopods got kidnapped by the \nnative Toraxians here. I just finally \nmanaged to rescue you.", "ehead", "Ethan", 41);
@@ -4258,6 +4297,11 @@ var TSAGame;
                     break;
                 case 46:
                     this.talky2.talk("If that's what you want, I will stay here. \nGoodluck rescuing James.", "whead", "Will", 0);
+                    break;
+                case 100:
+                    this.Aldis.body.velocity.x = -80;
+                    this.Aldis.scale.x = -1;
+                    this.Aldis.animations.play("move");
                     break;
                 case 404:
                     if (this.order != 6) {
@@ -4465,7 +4509,7 @@ var TSAGame;
             else if (this.order == 2) {
                 if (this.player.x >= 1888) {
                     this.order += 1;
-                    this.talky2.talk("Ethan, it looks like whatever this big \nplan is, you made it a lot harder by \nremoving them from the drone facility.", "ehead", "Ethan", 5);
+                    this.talky2.talk("Ethan, it looks like whatever this big \nplan is, you made it a lot harder by \nremoving them from the drone facility.", "whead", "Will", 5);
                 }
             }
             else if (this.order == 3) {
@@ -4491,6 +4535,11 @@ var TSAGame;
                     this.order += 1;
                     console.log("yeee");
                     this.factory();
+                }
+            }
+            if (this.factoryBg.visible) {
+                if (this.game.input.keyboard.isDown(Phaser.Keyboard.J)) {
+                    this.finalRoom();
                 }
             }
             this.diamologue();

@@ -225,7 +225,7 @@ namespace TSAGame {
              }else if (this.order == 2){
                    if (this.player.x >= 1888){
                        this.order+=1;
-                       this.talky2.talk("Ethan, it looks like whatever this big \nplan is, you made it a lot harder by \nremoving them from the drone facility.","ehead","Ethan",5);
+                       this.talky2.talk("Ethan, it looks like whatever this big \nplan is, you made it a lot harder by \nremoving them from the drone facility.","whead","Will",5);
                     }
              }else if(this.order==3){
                     if (this.player.x >= 2880){
@@ -248,6 +248,11 @@ namespace TSAGame {
                         console.log("yeee");
                         this.factory();
                     }
+             }if(this.factoryBg.visible){
+                 
+                 if(this.game.input.keyboard.isDown(Phaser.Keyboard.J)){
+                    this.finalRoom();
+                 }
              }
             this.diamologue();
         //    this.game.physics.arcade.collide(this.tbots, this.shipLayer);
@@ -342,7 +347,6 @@ namespace TSAGame {
             
             
         }finalRoom(){
-            
         }
         diamologue(){
             switch (this.talky2.finish)

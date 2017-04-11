@@ -57,6 +57,7 @@ namespace TSAGame {
             this.load.image("jayant", "./assets/Jeanette Saved.png");
             this.load.image("jaems", "./assets/James.png");
             this.load.image("talky box", "./assets/the talky box.png");
+            console.log("jtr")
             
             this.load.image("ehead", "./assets/EthanHead.png");
             this.load.image("sciHead", "./assets/sciHead.png");
@@ -77,7 +78,7 @@ namespace TSAGame {
             this.load.image("?button", "./assets/mystery button.png");
             this.load.image("Ship Tileset", "./assets/Tile Sets/coolest most bestest tileset.png");
             this.load.image("Ship2 Tileset", "./assets/Tile Sets/State level2.png");
-            this.load.image("Level 3 tileset", "./assets/Tile Sets/worst tileset.png");
+            this.load.image("Level 3 tileset", "./assets/Tile Sets/BaseTileset-1 (2).png");
             this.load.image("pauseButton", "./assets/pause.png");
             this.load.image("resume", "./assets/resume.png");
             this.load.image("reset", "./assets/main menu button.png");
@@ -130,7 +131,7 @@ namespace TSAGame {
             this.load.audio("elSound", "./assets/sound/elevator sound.mp3");
             this.load.tilemap('map', 'assets/Tile maps/Nova90.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
-            this.load.tilemap('map3', 'assets/Tile maps/ActualAlienBase.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('map3', 'assets/Tile maps/ugh.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
 
         }

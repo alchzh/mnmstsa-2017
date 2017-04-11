@@ -103,11 +103,11 @@ namespace TSAGame {
             this.tintI.alpha=0;
             
             this.cannons=this.game.add.group();
-            var c0=new Cannon(this.game,192,384,0,this.shipLayer,this.cannons);
+            //var c0=new Cannon(this.game,192,384,0,this.shipLayer,this.cannons);
             /*var c8=new Cannon(this.game,192,288,2,this.shipLayer,this.cannons);
             var c9=new Cannon(this.game,192 + 64,384,1,this.shipLayer,this.cannons);
             var c10=new Cannon(this.game,192 + 64,288,3,this.shipLayer,this.cannons);*/
-            var c1=new Cannon(this.game,496,492,2,this.shipLayer,this.cannons);
+            //var c1=new Cannon(this.game,468,460,3,this.shipLayer,this.cannons);
             var c2=new Cannon(this.game,1548,207,1,this.shipLayer,this.cannons);
             var c3=new Cannon(this.game,1620,428,3,this.shipLayer,this.cannons);
             var c4=new Cannon(this.game,2512,396,2,this.shipLayer,this.cannons);
@@ -171,7 +171,7 @@ namespace TSAGame {
             this.cryopod.animations.add("jayant", [1,2,3,4,5,6,7], 12);
             this.talky1=new DialogueBoxCasual(this.game);
             this.talky2=new DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue] ","ehead","Ethan",1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue]] ","ehead","Ethan",1);
 
             this.pause=this.game.add.button(700,12,"pauseButton");
             this.pause.fixedToCamera=true;
@@ -411,9 +411,6 @@ namespace TSAGame {
              {
                  this.setOff = true;
                  this.game.camera.shake(0.0025,50);
-             }
-             if(this.game.input.keyboard.isDown(Phaser.Keyboard.J)){
-                 this.game.camera.shake(0.002, 5000);
              }
              
             this.sensors.setAll("drones",this.drones);

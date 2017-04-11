@@ -197,7 +197,7 @@ namespace TSAGame {
 
             this.talky1=new DialogueBoxCasual(this.game);
             this.talky2=new DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow. This is quite different.jk it ","ehead","Ethan",1);
+            this.talky2.talk("Wow. This is quite different. ;;;;;","ehead","Ethan",1);
             this.button1 = new Invis(this.game);
             this.button2 = new Shield(this.game);
             this.bgMusic = this.game.add.audio("second", 0.6, true);
@@ -258,18 +258,24 @@ namespace TSAGame {
                         this.boril.kill();    
                         this.order=69;
                     }
-                }else{
+                }else if(this.Aldis.alive){
                     if(this.order==69){
                         this.order+=1;
                         this.talky2.talk("Well that didn't do much. I got the \naliens to come in here but one already \nwent back.","ehead", "Ethan" ,26);
-                    }if(this.game.physics.arcade.collide(this.player, this.comp2)&&this.Aldis.x<4200){
+                    }
+                    if(this.game.physics.arcade.collide(this.player, this.comp2)){
+                        this.player.x-=10;
                         this.talky2.talk("All right I'm entering the username \nand password you gave me.","ehead", "Ethan" ,30);
+                    }if(this.Aldis.body.velocity.x<-10&&this.Aldis.x<=4270){
+                        this.Aldis.kill();    
+                        this.order+=1;
+                        this.talky2.talk("Hey that actually worked! I should \nprobably go on that elevator up there \nand leave.","ehead", "Ethan" ,0);
                     }
                 }
                 if(this.game.physics.arcade.collide(this.player, this.comp1)&&this.Aldis.x<4200){
                     this.talky2.talk("Well there is the off switch. I just \nhave to press it...","ehead", "Ethan" ,9000);
                  }
-                 if(this.player.bottom<64){
+                 if(this.player.bottom<64&&this.order==71){
                      this.goodbye();
                 }
              
@@ -279,14 +285,14 @@ namespace TSAGame {
                 if(awake&&this.cryopod.frame==0)this.cryopod.animations.play("will");
                 console.log("frame: "+this.cryopod.frame+" order: "+this.order);
                 if(this.cryopod.frame==12){
-                    if(this.order==70){
+                    if(this.order==71){
                         
                         this.talky2.talk("What the- this looks nothing like our \nship, or where we put our cryopods.","whead", "Will" ,40);
                         this.order+=1;
                     }
                 }
             if(this.game.physics.arcade.collide(this.player, this.level2End)){
-                    if (this.order==71){
+                    if (this.order==72){
                         
                         this.bgMusic.stop();
                         if (parseInt(localStorage.getItem("clearedLevel")) < 2) {
@@ -341,7 +347,7 @@ namespace TSAGame {
              }else if(this.order==4){
                     if (this.player.x >= 3296){
                         this.order+=1;
-                        this.talky1.talk("I'm near the end of the ship, I should see will soon.","ehead","Ethan",2);
+                        this.talky1.talk("I'm near the end of the ship, I should \nsee will soon.","ehead","Ethan",2);
                     }
              }else if(this.order==5){
                     if (this.player.x >= 3744&&this.player.y<224){
@@ -497,7 +503,7 @@ namespace TSAGame {
             this.duckBot=this.game.add.group();
             let duck1 = this.game.add.sprite(4448,328,"duckbot");
             
-            let elevator = new Elevator(this.game,4896,64,0,this.elevators,1,"alienElevator");
+            let elevator = new Elevator(this.game,4896,45,0,this.elevators,1,"alienElevator");
             
             this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.","ehead","Ethan",0);
         }shutDown(){
@@ -593,7 +599,7 @@ namespace TSAGame {
                 this.talky2.talk("Well if it was that human then I will \nfind it.","sciHead","Aldis",24);
                 break;
             case 24:
-                this.talky2.talk("Do whatever you want but I'm leaving.","sciHead","Aldis",25);
+                this.talky2.talk("Do whatever you want but I'm leaving.","sciHead","Boril",25);
                 break;
                 
             case 25:
@@ -611,8 +617,38 @@ namespace TSAGame {
                 this.talky2.talk("I think that is the leaders name! I bet I \ncan do a lot if I access that account!!\nJust need to find that computer...","ehead","Ethan",0);
                 break;
             case 30:
-                this.talky2.talk("Oh my I can do so much! This is \nincredible. Now I can definitely get rid \nof that Toraxian!","ehead","Ethan",0);
+                this.talky2.talk("Oh my I can do so much! This is \nincredible. Now I can definitely get rid \nof that Toraxian!","ehead","Ethan",31);
                 break;
+            case 31:
+                this.talky2.talk("It looks like I can even overheat the \nengines in this ship...","ehead","Ethan",32);
+                break;
+            case 32:
+                this.talky2.talk("You can do what-","jhead","Janet",33);
+                break;
+            case 33:
+                this.game.camera.shake(0.004, 1000);
+                let extimer = this.game.time.create(true);
+                extimer.add(1200, function pancake() {this.talky2.talk("What just happened?!?!","sciHead","Aldis",34);}, this);
+                extimer.start();
+                break;
+            case 34:
+                this.talky2.talk("Well aldis, that last human just \noverheated the engine which caused it to \nexplode","sciHead","Boril",35);
+                break;
+            case 35:
+                this.talky2.talk("Uhh, general Zelek we have a problem up \nhere.","sciHead","Aldis",36);
+                break;
+            case 36:
+                this.talky2.talk("Yes, I can see what happened from the \nbase. We need everyone to evacuate now.","?hed","Zelek",37);
+                break;
+            case 37:
+                this.talky2.talk("Well the engine he destroyed can't harm \nanyone.","sciHead","Aldis",38);
+            break;
+            case 38:
+                this.talky2.talk("If he destroys the other one the ship \nwill crash on Torax.","?hed","Zelek",39);
+            break;
+            case 39:
+                this.talky2.talk("Ok fine.","sciHead","Aldis",100);
+            break;
             case 40:
                 this.talky2.talk("Well our cryopods got kidnapped by the \nnative Toraxians here. I just finally \nmanaged to rescue you.","ehead","Ethan",41);
                 break;
@@ -633,7 +669,12 @@ namespace TSAGame {
                 break; 
                 case 46:
                 this.talky2.talk("If that's what you want, I will stay here. \nGoodluck rescuing James.","whead","Will",0);
-                break; 
+                break;
+            case 100:
+                this.Aldis.body.velocity.x=-80;  
+                this.Aldis.scale.x=-1;
+                this.Aldis.animations.play("move");
+                break;
             case 404:
                 if(this.order!=6){
                     this.talky2.talk("Well, I don't know any passwords. I guess \nI should move on.","ehead","Ethan",0);
