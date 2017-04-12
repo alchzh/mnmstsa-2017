@@ -3910,10 +3910,7 @@ var TSAGame;
                 }
                 else if (this.Aldis.alive) {
                     console.log("mehmeh");
-                    for (var i = 0; i < this.newDrones.children.length; i++) {
-                        this.newDrones.children[i].body.velocity.x = 0;
-                        this.newDrones.children[i].body.velocity.y = 0;
-                    }
+                    
                     if (this.order == 69) {
                         this.order += 1;
                         this.talky2.talk("Well that didn't do much. I got the \naliens to come in here but one already \nwent back.", "ehead", "Ethan", 26);
@@ -4393,6 +4390,10 @@ var TSAGame;
                     this.door.animations.play("open");
                     break;
                 case 9000:
+                    for (var i = 0; i < this.newDrones.children.length; i++) {
+                        this.newDrones.children[i].body.velocity.x = 0;
+                        this.newDrones.children[i].body.velocity.y = 0;
+                    }
                     this.player.x += 10;
                     this.shutDown();
                     break;
