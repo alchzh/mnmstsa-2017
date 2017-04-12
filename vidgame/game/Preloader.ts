@@ -115,6 +115,8 @@ namespace TSAGame {
 
             this.load.spritesheet("drone", "./assets/drone.png", 48, 36);
             this.load.spritesheet("drone2", "./assets/drone clone.png", 48, 36);
+            this.load.spritesheet("conveyor", "./assets/conveyor.png", 96, 16);
+            this.load.image("offDrone", "./assets/Evil Drone-1.png");
             this.load.spritesheet("levelEnd", "./assets/AlienTeleporter.png", 34, 66);
             this.load.audio("first", "./assets/sound/first.mp3");
             this.load.audio("second", "./assets/sound/OLIVER's song.mp3");
@@ -133,6 +135,8 @@ namespace TSAGame {
             this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map3', 'assets/Tile maps/ugh.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('factory', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('endingg', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
 
         }
 

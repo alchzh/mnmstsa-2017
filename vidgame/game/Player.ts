@@ -231,7 +231,7 @@ namespace TSAGame{
             //}
             
       //      this.game.debug.body(this);
-            let debug=true;
+            let debug=false;
             if(this.energy<0)this.energy=0;
             if(debug){
                     if(this.game.input.keyboard.isDown(Phaser.Keyboard.R)){

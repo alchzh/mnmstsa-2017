@@ -17,12 +17,14 @@ namespace TSAGame {
         comp2:any;
         map:any;
         map2:any;
+        newDrones:any;
         sensors:any;
         duckBot:any;
         sensors2:any;
         shipLayer:any;
         instructions:Phaser.Sprite;
         boril:any;
+        conveyors:any;
         Aldis:any;
         scientists:any;
         timer:any;
@@ -66,7 +68,12 @@ namespace TSAGame {
             this.alarm=this.game.add.group();
             this.order=0;
             let alarm=new Alarm(this.game,384,160,"siren2",this.alarm,0);
-            let alarm2=new Alarm(this.game,448,160,"siren2",this.alarm,0);
+            let alarm2=new Alarm(this.game,704,160,"siren2",this.alarm,-90);
+            let alarm3=new Alarm(this.game,1376,128,"siren2",this.alarm,90);
+            let alarm4=new Alarm(this.game,2048,64,"siren2",this.alarm,0);
+            let alarm5=new Alarm(this.game,3488,64,"siren2",this.alarm,0);
+            this.duckBot=this.game.add.group();
+            this.newDrones=this.game.add.group();
             this.warntalk = true;
             this.almostDone=false;
             let chain1=new Chain(this.game,3051,32);
@@ -116,6 +123,7 @@ namespace TSAGame {
             this.tintI.scale.y=300;
             this.tintI.fixedToCamera = true;
             
+            this.conveyors=this.game.add.group();
             this.elevators= this.game.add.group();
             
             let elevator = new Elevator(this.game,160,256,480,this.elevators,1,"alienElevator");
@@ -197,7 +205,7 @@ namespace TSAGame {
 
             this.talky1=new DialogueBoxCasual(this.game);
             this.talky2=new DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow. This is quite different. ;;;;;","ehead","Ethan",1);
+            this.talky2.talk("Wow. This is quite different. ","ehead","Ethan",1);
             this.button1 = new Invis(this.game);
             this.button2 = new Shield(this.game);
             this.bgMusic = this.game.add.audio("second", 0.6, true);
@@ -239,8 +247,14 @@ namespace TSAGame {
                 this.game.physics.arcade.collide(this.player, this.otherLayer);
                 this.game.physics.arcade.collide(this.aliens, this.otherLayer);
                 this.game.physics.arcade.collide(this.scientists, this.otherLayer);
+                this.game.physics.arcade.collide(this.player, this.conveyors);
                 
                 if(this.boril.alive){
+                    if(this.newDrones.children[0].x>=4384)this.newDrones.children[0].x=4288;
+                    if(this.newDrones.children[1].x>=4480)this.newDrones.children[1].x=4384;
+                    if(this.newDrones.children[2].x>=4576)this.newDrones.children[2].x=4480;
+                    if(this.newDrones.children[3].x>=4640)this.newDrones.children[3].x=4576;
+                    if(this.newDrones.children[4].y<=208)this.newDrones.children[4].y=336;
                     if(this.Aldis.x>4352&&this.Aldis.body.velocity.x!=0){
                         this.Aldis.body.velocity.x=0;
                         this.Aldis.animations.stop();
@@ -259,6 +273,12 @@ namespace TSAGame {
                         this.order=69;
                     }
                 }else if(this.Aldis.alive){
+                    console.log("mehmeh")
+                    for(var i =0; i < this.newDrones.children.length;i++){
+                        this.newDrones.children[i].body.velocity.x=0;
+                        this.newDrones.children[i].body.velocity.y=0;
+                    }
+                    
                     if(this.order==69){
                         this.order+=1;
                         this.talky2.talk("Well that didn't do much. I got the \naliens to come in here but one already \nwent back.","ehead", "Ethan" ,26);
@@ -313,9 +333,7 @@ namespace TSAGame {
             
             this.reset.alpha = 1;
             
-             if(this.game.input.keyboard.isDown(Phaser.Keyboard.O)){
-                 this.player.x+=10;
-             }if(this.game.input.keyboard.isDown(Phaser.Keyboard.P)){
+             if(this.game.input.keyboard.isDown(Phaser.Keyboard.P)&&!this.inFacility){
                  this.facility();
              }
 
@@ -476,7 +494,6 @@ namespace TSAGame {
         restart(){
             this.game.sound.stopAll();
             this.game.state.start("level2");
-
         }facility(){
             this.game.world.resize(4992, 600);
             this.game.camera.unfollow();
@@ -492,6 +509,47 @@ namespace TSAGame {
             this.cannons.removeAll(true);
             let alien01= new Alien(this.game,4822,320,4932,this.otherLayer,this.aliens);
             
+            let duck1 = this.game.add.sprite(4428,328,"duckbot");
+            this.duckBot.add(duck1);
+            duck1.animations.add("usb",[6,6,6,6,6,6,6,7,8],4,true);
+            duck1.animations.play("usb");
+            
+            let offDrone1=this.game.add.sprite(4288,368,"offDrone");
+            this.game.physics.arcade.enable(offDrone1);
+            offDrone1.scale.y=-1;
+            this.newDrones.add(offDrone1);
+            offDrone1.body.velocity.x=45;
+            let offDrone2=this.game.add.sprite(4384,368,"offDrone");
+            this.game.physics.arcade.enable(offDrone2);
+            offDrone2.scale.y=-1;
+            this.newDrones.add(offDrone2);
+            offDrone2.body.velocity.x=45;
+            let offDrone3=this.game.add.sprite(4480,368,"offDrone");
+            this.game.physics.arcade.enable(offDrone3);
+            offDrone3.scale.y=-1;
+            this.newDrones.add(offDrone3);
+            offDrone3.body.velocity.x=45;
+            let offDrone4=this.game.add.sprite(4576,336,"offDrone");
+            this.game.physics.arcade.enable(offDrone4);
+            this.newDrones.add(offDrone4);
+            offDrone4.body.velocity.x=30;
+            let offDrone5=this.game.add.sprite(4640,336,"offDrone");
+            this.game.physics.arcade.enable(offDrone5);
+            this.newDrones.add(offDrone5);
+            offDrone5.body.velocity.y=-60;
+            let chain1=new Chain(this.game,4587,128);
+            let chain2=new Chain(this.game,4331,128);
+            let chain3=new Chain(this.game,4459,128);
+            let chain4=new Chain(this.game,4587,32,true);
+            let chain6=new Chain(this.game,4459,32,true);
+            
+
+
+            let con1=this.game.add.sprite(4288,368,"conveyor");
+            let con2=this.game.add.sprite(4384,368,"conveyor");
+            let con3=this.game.add.sprite(4480,368,"conveyor");
+            this.conveyors.add(con1);this.conveyors.add(con2);this.conveyors.add(con3);
+            
             this.comp1 = this.game.add.sprite(4224,88,"?button");
             this.game.physics.arcade.enable(this.comp1);
             this.comp1.body.immovable=true;
@@ -500,17 +558,17 @@ namespace TSAGame {
             this.game.physics.arcade.enable(this.comp2);
             this.comp2.body.immovable=true;
             this.comp2.scale.x=-1;
-            this.duckBot=this.game.add.group();
-            let duck1 = this.game.add.sprite(4448,328,"duckbot");
             
+
             let elevator = new Elevator(this.game,4896,45,0,this.elevators,1,"alienElevator");
             
-            this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.","ehead","Ethan",0);
+            this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.","ehead","Ethan",88);
         }shutDown(){
             this.Aldis.x=4220;
             this.Aldis.y=448;
             this.Aldis.animations.play("move");
             this.Aldis.body.velocity.x=135;
+            this.conveyors.callAllExists("animations.stop",true);
         }goodbye(){
             this.game.world.resize(4000, 600);
             this.scientists.removeAll(true);
@@ -663,6 +721,9 @@ namespace TSAGame {
                 break;
             case 44:
                 this.talky2.talk("Umm, ok. Are you sure you want to go to \nthe alien base by yourself?","whead","Will",45);
+                break;
+            case 88:
+                this.talky2.talk("I will have to press the button at the \ntop left corner of this room","ehead","Ethan",0);
                 break;
              case 45:
                 this.talky2.talk("Well I pretty much have to. But hopefully \nyou can help me from in here.","ehead","Ethan",46);

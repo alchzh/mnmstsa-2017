@@ -111,7 +111,6 @@ namespace TSAGame {
                 if(this.direction==-1){
                     this.body.velocity.y=120;
                 }if(this.direction==1){
-                    console.log("[][][]");
                     this.body.velocity.y=-120;
                 }
             }
@@ -177,6 +176,7 @@ namespace TSAGame {
                     this.prevPM=0;
                     this.pauseMovement=false;
                     this.direction=1;
+                    this.y-=3;
                     this.body.velocity.y = -120;
                 }
                 else {
@@ -191,7 +191,7 @@ namespace TSAGame {
                     this.body.velocity.y = -120;
                 }
                 else {
-
+                    this.y+=3;
                      this.prevPM=0;
                     this.direction=-1;
                     this.body.velocity.y = 120;
@@ -587,13 +587,14 @@ namespace TSAGame {
     }
     export class Chain extends Phaser.Image{
         glow:any;
-        constructor(game:Phaser.Game,x:number,y:number) {
+        constructor(game:Phaser.Game,x:number,y:number,show=false) {
             super(game,x,y,"chain");
             game.add.existing(this)
             this.glow=game.add.image(x-60,y+40,"lights");
             this.glow.alpha=.4;
             this.glow.scale.x=.5;
             this.glow.scale.y=.5
+            if(show)this.glow.visible=false;
         }
     }
     export class Sensor extends Phaser.Sprite{

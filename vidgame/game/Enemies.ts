@@ -24,6 +24,7 @@ namespace TSAGame {
         glass:boolean;
         possibleElevators:number[];
         isTriggered:boolean;
+        seesing:boolean;
         suspicion:any;
         disrupted:boolean;
         blasts:any;
@@ -48,6 +49,7 @@ namespace TSAGame {
             this.stuckX=0;
 			game.add.existing(this);
 			this.direction = -1;
+			this.seesing=false;
 			this.suspicious=false;
             this.blasts=this.game.add.group();
             this.laserEnd = 3200;
@@ -100,6 +102,7 @@ namespace TSAGame {
             this.blastSound = this.game.add.audio("blast", 0.2, false);
         }
         updateLine(playerLine:Phaser.Line){
+            this.seesing=false;
             if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 15 ) {
                 if (this.direction=== -1) {
                     if(this.laserEnd1==-1||this.laserEndY!=this.y){

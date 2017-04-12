@@ -73,6 +73,7 @@ var TSAGame;
             _this.stuckX = 0;
             game.add.existing(_this);
             _this.direction = -1;
+            _this.seesing = false;
             _this.suspicious = false;
             _this.blasts = _this.game.add.group();
             _this.laserEnd = 3200;
@@ -118,6 +119,7 @@ var TSAGame;
             return _this;
         }
         Alien.prototype.updateLine = function (playerLine) {
+            this.seesing = false;
             if ((this.body.blocked.down || this.body.touching.down) && this.animations.frame < 15) {
                 if (this.direction === -1) {
                     if (this.laserEnd1 == -1 || this.laserEndY != this.y) {
@@ -1239,7 +1241,6 @@ var TSAGame;
                     this.body.velocity.y = 120;
                 }
                 if (this.direction == 1) {
-                    console.log("[][][]");
                     this.body.velocity.y = -120;
                 }
             }
@@ -1297,6 +1298,7 @@ var TSAGame;
                     this.prevPM = 0;
                     this.pauseMovement = false;
                     this.direction = 1;
+                    this.y -= 3;
                     this.body.velocity.y = -120;
                 }
                 else {
@@ -1312,6 +1314,7 @@ var TSAGame;
                     this.body.velocity.y = -120;
                 }
                 else {
+                    this.y += 3;
                     this.prevPM = 0;
                     this.direction = -1;
                     this.body.velocity.y = 120;
@@ -1686,13 +1689,16 @@ var TSAGame;
     TSAGame.Alarm = Alarm;
     var Chain = (function (_super) {
         __extends(Chain, _super);
-        function Chain(game, x, y) {
+        function Chain(game, x, y, show) {
+            if (show === void 0) { show = false; }
             var _this = _super.call(this, game, x, y, "chain") || this;
             game.add.existing(_this);
             _this.glow = game.add.image(x - 60, y + 40, "lights");
             _this.glow.alpha = .4;
             _this.glow.scale.x = .5;
             _this.glow.scale.y = .5;
+            if (show)
+                _this.glow.visible = false;
             return _this;
         }
         return Chain;
@@ -2524,7 +2530,7 @@ var TSAGame;
                     this.animations.frame = 0;
                 }
             }
-            var debug = true;
+            var debug = false;
             if (this.energy < 0)
                 this.energy = 0;
             if (debug) {
@@ -2778,6 +2784,8 @@ var TSAGame;
             this.load.spritesheet("duckbot", "./assets/Duckbot.png", 62, 56);
             this.load.spritesheet("drone", "./assets/drone.png", 48, 36);
             this.load.spritesheet("drone2", "./assets/drone clone.png", 48, 36);
+            this.load.spritesheet("conveyor", "./assets/conveyor.png", 96, 16);
+            this.load.image("offDrone", "./assets/Evil Drone-1.png");
             this.load.spritesheet("levelEnd", "./assets/AlienTeleporter.png", 34, 66);
             this.load.audio("first", "./assets/sound/first.mp3");
             this.load.audio("second", "./assets/sound/OLIVER's song.mp3");
@@ -2795,6 +2803,8 @@ var TSAGame;
             this.load.tilemap('map2', 'assets/Tile maps/4-10ship.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('map3', 'assets/Tile maps/ugh.json', null, Phaser.Tilemap.TILED_JSON);
             this.load.tilemap('facility', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('factory', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
+            this.load.tilemap('endingg', 'assets/Tile maps/Facility.json', null, Phaser.Tilemap.TILED_JSON);
         };
         Preloader.prototype.create = function () {
             var _this = this;
@@ -3333,7 +3343,7 @@ var TSAGame;
             this.cryopod.animations.add("jayant", [1, 2, 3, 4, 5, 6, 7], 12);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue]] ", "ehead", "Ethan", 1);
+            this.talky2.talk("That's odd... The other crew members are \nmissing, and so are their cryopods.\n[Press [z] to continue] ", "ehead", "Ethan", 1);
             this.pause = this.game.add.button(700, 12, "pauseButton");
             this.pause.fixedToCamera = true;
             this.pause.onInputDown.add(this.pauseGame, this);
@@ -3714,7 +3724,12 @@ var TSAGame;
             this.alarm = this.game.add.group();
             this.order = 0;
             var alarm = new TSAGame.Alarm(this.game, 384, 160, "siren2", this.alarm, 0);
-            var alarm2 = new TSAGame.Alarm(this.game, 448, 160, "siren2", this.alarm, 0);
+            var alarm2 = new TSAGame.Alarm(this.game, 704, 160, "siren2", this.alarm, -90);
+            var alarm3 = new TSAGame.Alarm(this.game, 1376, 128, "siren2", this.alarm, 90);
+            var alarm4 = new TSAGame.Alarm(this.game, 2048, 64, "siren2", this.alarm, 0);
+            var alarm5 = new TSAGame.Alarm(this.game, 3488, 64, "siren2", this.alarm, 0);
+            this.duckBot = this.game.add.group();
+            this.newDrones = this.game.add.group();
             this.warntalk = true;
             this.almostDone = false;
             var chain1 = new TSAGame.Chain(this.game, 3051, 32);
@@ -3757,6 +3772,7 @@ var TSAGame;
             this.tintI.scale.x = 100;
             this.tintI.scale.y = 300;
             this.tintI.fixedToCamera = true;
+            this.conveyors = this.game.add.group();
             this.elevators = this.game.add.group();
             var elevator = new TSAGame.Elevator(this.game, 160, 256, 480, this.elevators, 1, "alienElevator");
             var elevator2 = new TSAGame.Elevator(this.game, 1312, 480, 320, this.elevators, 1, "alienElevator");
@@ -3818,7 +3834,7 @@ var TSAGame;
             var alien3 = new TSAGame.Alien(this.game, 2846, 320, 3136, this.shipLayer, this.aliens, [12]);
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow. This is quite different. ;;;;;", "ehead", "Ethan", 1);
+            this.talky2.talk("Wow. This is quite different. ", "ehead", "Ethan", 1);
             this.button1 = new TSAGame.Invis(this.game);
             this.button2 = new TSAGame.Shield(this.game);
             this.bgMusic = this.game.add.audio("second", 0.6, true);
@@ -3860,7 +3876,18 @@ var TSAGame;
                 this.game.physics.arcade.collide(this.player, this.otherLayer);
                 this.game.physics.arcade.collide(this.aliens, this.otherLayer);
                 this.game.physics.arcade.collide(this.scientists, this.otherLayer);
+                this.game.physics.arcade.collide(this.player, this.conveyors);
                 if (this.boril.alive) {
+                    if (this.newDrones.children[0].x >= 4384)
+                        this.newDrones.children[0].x = 4288;
+                    if (this.newDrones.children[1].x >= 4480)
+                        this.newDrones.children[1].x = 4384;
+                    if (this.newDrones.children[2].x >= 4576)
+                        this.newDrones.children[2].x = 4480;
+                    if (this.newDrones.children[3].x >= 4640)
+                        this.newDrones.children[3].x = 4576;
+                    if (this.newDrones.children[4].y <= 208)
+                        this.newDrones.children[4].y = 336;
                     if (this.Aldis.x > 4352 && this.Aldis.body.velocity.x != 0) {
                         this.Aldis.body.velocity.x = 0;
                         this.Aldis.animations.stop();
@@ -3882,6 +3909,11 @@ var TSAGame;
                     }
                 }
                 else if (this.Aldis.alive) {
+                    console.log("mehmeh");
+                    for (var i = 0; i < this.newDrones.children.length; i++) {
+                        this.newDrones.children[i].body.velocity.x = 0;
+                        this.newDrones.children[i].body.velocity.y = 0;
+                    }
                     if (this.order == 69) {
                         this.order += 1;
                         this.talky2.talk("Well that didn't do much. I got the \naliens to come in here but one already \nwent back.", "ehead", "Ethan", 26);
@@ -3932,10 +3964,7 @@ var TSAGame;
                 this.level2End.alpha = 0;
             }
             this.reset.alpha = 1;
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.O)) {
-                this.player.x += 10;
-            }
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.P)) {
+            if (this.game.input.keyboard.isDown(Phaser.Keyboard.P) && !this.inFacility) {
                 this.facility();
             }
             this.resume.alpha = 0;
@@ -4123,6 +4152,44 @@ var TSAGame;
             this.aliens.removeAll(true);
             this.cannons.removeAll(true);
             var alien01 = new TSAGame.Alien(this.game, 4822, 320, 4932, this.otherLayer, this.aliens);
+            var duck1 = this.game.add.sprite(4428, 328, "duckbot");
+            this.duckBot.add(duck1);
+            duck1.animations.add("usb", [6, 6, 6, 6, 6, 6, 6, 7, 8], 4, true);
+            duck1.animations.play("usb");
+            var offDrone1 = this.game.add.sprite(4288, 368, "offDrone");
+            this.game.physics.arcade.enable(offDrone1);
+            offDrone1.scale.y = -1;
+            this.newDrones.add(offDrone1);
+            offDrone1.body.velocity.x = 45;
+            var offDrone2 = this.game.add.sprite(4384, 368, "offDrone");
+            this.game.physics.arcade.enable(offDrone2);
+            offDrone2.scale.y = -1;
+            this.newDrones.add(offDrone2);
+            offDrone2.body.velocity.x = 45;
+            var offDrone3 = this.game.add.sprite(4480, 368, "offDrone");
+            this.game.physics.arcade.enable(offDrone3);
+            offDrone3.scale.y = -1;
+            this.newDrones.add(offDrone3);
+            offDrone3.body.velocity.x = 45;
+            var offDrone4 = this.game.add.sprite(4576, 336, "offDrone");
+            this.game.physics.arcade.enable(offDrone4);
+            this.newDrones.add(offDrone4);
+            offDrone4.body.velocity.x = 30;
+            var offDrone5 = this.game.add.sprite(4640, 336, "offDrone");
+            this.game.physics.arcade.enable(offDrone5);
+            this.newDrones.add(offDrone5);
+            offDrone5.body.velocity.y = -60;
+            var chain1 = new TSAGame.Chain(this.game, 4587, 128);
+            var chain2 = new TSAGame.Chain(this.game, 4331, 128);
+            var chain3 = new TSAGame.Chain(this.game, 4459, 128);
+            var chain4 = new TSAGame.Chain(this.game, 4587, 32, true);
+            var chain6 = new TSAGame.Chain(this.game, 4459, 32, true);
+            var con1 = this.game.add.sprite(4288, 368, "conveyor");
+            var con2 = this.game.add.sprite(4384, 368, "conveyor");
+            var con3 = this.game.add.sprite(4480, 368, "conveyor");
+            this.conveyors.add(con1);
+            this.conveyors.add(con2);
+            this.conveyors.add(con3);
             this.comp1 = this.game.add.sprite(4224, 88, "?button");
             this.game.physics.arcade.enable(this.comp1);
             this.comp1.body.immovable = true;
@@ -4130,16 +4197,15 @@ var TSAGame;
             this.game.physics.arcade.enable(this.comp2);
             this.comp2.body.immovable = true;
             this.comp2.scale.x = -1;
-            this.duckBot = this.game.add.group();
-            var duck1 = this.game.add.sprite(4448, 328, "duckbot");
             var elevator = new TSAGame.Elevator(this.game, 4896, 45, 0, this.elevators, 1, "alienElevator");
-            this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.", "ehead", "Ethan", 0);
+            this.talky2.talk("So I guess I should just turn it all off. \nHopefully that will work without harming \nme.", "ehead", "Ethan", 88);
         };
         Level2.prototype.shutDown = function () {
             this.Aldis.x = 4220;
             this.Aldis.y = 448;
             this.Aldis.animations.play("move");
             this.Aldis.body.velocity.x = 135;
+            this.conveyors.callAllExists("animations.stop", true);
         };
         Level2.prototype.goodbye = function () {
             this.game.world.resize(4000, 600);
@@ -4292,6 +4358,9 @@ var TSAGame;
                 case 44:
                     this.talky2.talk("Umm, ok. Are you sure you want to go to \nthe alien base by yourself?", "whead", "Will", 45);
                     break;
+                case 88:
+                    this.talky2.talk("I will have to press the button at the \ntop left corner of this room", "ehead", "Ethan", 0);
+                    break;
                 case 45:
                     this.talky2.talk("Well I pretty much have to. But hopefully \nyou can help me from in here.", "ehead", "Ethan", 46);
                     break;
@@ -4356,6 +4425,7 @@ var TSAGame;
             this.shipLayer = this.map.createLayer("Tile Layer 1");
             this.map.setCollision([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
             this.healthBar = new TSAGame.HealthBar(this.game);
+            this.shutoff = 0;
             this.player.layer = this.shipLayer;
             this.elevators = this.game.add.group();
             var elevator = new TSAGame.Elevator(this.game, 1632, 520, 32, this.elevators, -1, "alienElevator");
@@ -4363,7 +4433,7 @@ var TSAGame;
             var elevator3 = new TSAGame.Elevator(this.game, 2784, 168, 360, this.elevators, 1, "alienElevator");
             var elevator4 = new TSAGame.Elevator(this.game, 4672, 160, 0, this.elevators, 1, "alienElevator");
             var elevator5 = new TSAGame.Elevator(this.game, 4064, 170, 364, this.elevators, 1, "alienElevator");
-            var elevator6 = new TSAGame.Elevator(this.game, 3744, 170, 492, this.elevators, -1, "alienElevator");
+            var elevator6 = new TSAGame.Elevator(this.game, 3744, 492, 170, this.elevators, -1, "alienElevator");
             this.alarm = this.game.add.group();
             this.prevSetoff = false;
             this.setOff = false;
@@ -4379,11 +4449,9 @@ var TSAGame;
             var alien2 = new TSAGame.Alien(this.game, 640, 480, 768, this.shipLayer, this.aliens);
             var alien3 = new TSAGame.Alien(this.game, 800, 480, 864, this.shipLayer, this.aliens);
             var alien4 = new TSAGame.Alien(this.game, 438, 64, 524, this.shipLayer, this.aliens);
-            var alien6 = new TSAGame.Alien(this.game, 3860, 320, 3934, this.shipLayer, this.aliens);
+            var alien6 = new TSAGame.Alien(this.game, 3770, 320, 4040, this.shipLayer, this.aliens, [12, 15]);
             var alien7 = new TSAGame.Alien(this.game, 2456, 128, 2815, this.shipLayer, this.aliens, [3, 6]);
             var alien8 = new TSAGame.Alien(this.game, 2456, 320, 2815, this.shipLayer, this.aliens, [3, 6]);
-            var alien9 = new TSAGame.Alien(this.game, 2456, 128, 2815, this.shipLayer, this.aliens, [3, 6]);
-            var alien10 = new TSAGame.Alien(this.game, 2456, 320, 2815, this.shipLayer, this.aliens, [3, 6]);
             this.tbots = this.game.add.group();
             var tbot1 = new TSAGame.TBot(this.game, 1332, 128, 1415, this.shipLayer, this.tbots, this.player);
             var tbot2 = new TSAGame.TBot(this.game, 2048, 210, 2144, this.shipLayer, this.tbots, this.player);
@@ -4393,9 +4461,17 @@ var TSAGame;
             this.sensors = this.game.add.group();
             var sensor = new TSAGame.Sensor(this.game, 1088, 320, 512, "", 2, this.shipLayer, this.sensors);
             this.cannons = this.game.add.group();
-            var c1 = new TSAGame.Cannon(this.game, 496, 492, 2, this.shipLayer, this.cannons);
-            var c2 = new TSAGame.Cannon(this.game, 1548, 207, 1, this.shipLayer, this.cannons);
-            var c3 = new TSAGame.Cannon(this.game, 1620, 428, 3, this.shipLayer, this.cannons);
+            var c1 = new TSAGame.Cannon(this.game, 816, 332, 2, this.shipLayer, this.cannons);
+            var c2 = new TSAGame.Cannon(this.game, 848, 172, 2, this.shipLayer, this.cannons);
+            var c3 = new TSAGame.Cannon(this.game, 1428, 130, 3, this.shipLayer, this.cannons);
+            var c4 = new TSAGame.Cannon(this.game, 1428, 386, 3, this.shipLayer, this.cannons);
+            var c5 = new TSAGame.Cannon(this.game, 2128, 140, 2, this.shipLayer, this.cannons);
+            var c6 = new TSAGame.Cannon(this.game, 2836, 130, 3, this.shipLayer, this.cannons);
+            var c7 = new TSAGame.Cannon(this.game, 2444, 320, 1, this.shipLayer, this.cannons);
+            var c8 = new TSAGame.Cannon(this.game, 3296, 204, 2, this.shipLayer, this.cannons);
+            var c9 = new TSAGame.Cannon(this.game, 2956, 244, 1, this.shipLayer, this.cannons);
+            var c10 = new TSAGame.Cannon(this.game, 4480, 76, 2, this.shipLayer, this.cannons);
+            var c11 = new TSAGame.Cannon(this.game, 3692, 76, 2, this.shipLayer, this.cannons);
             this.order = 0;
             this.level3end = this.game.add.sprite(4640, 300, "levelEnd");
             this.game.physics.arcade.enable(this.level3end);
@@ -4416,7 +4492,7 @@ var TSAGame;
             }
             this.talky1 = new TSAGame.DialogueBoxCasual(this.game);
             this.talky2 = new TSAGame.DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow this is going to be hard.  ))((", "ehead", "Ethan", 0);
+            this.talky2.talk("Wow this is going to be hard.  ", "ehead", "Ethan", 0);
             this.button1 = new TSAGame.Invis(this.game);
             this.button2 = new TSAGame.Shield(this.game);
             this.bgMusic = this.game.add.audio("third", 1, true);
@@ -4521,7 +4597,7 @@ var TSAGame;
             else if (this.order == 4) {
                 if (this.player.x >= 3680) {
                     this.order += 1;
-                    this.talky2.talk("Your destination is very close Ethan! You can do it.", "whead", "Will", 0);
+                    this.talky2.talk("Your destination is very close Ethan! \nYou can do it.", "whead", "Will", 0);
                 }
             }
             else if (this.order == 5) {
@@ -4533,11 +4609,17 @@ var TSAGame;
             else if (this.order == 6) {
                 if (this.player.x >= 4600 && this.player.y < 60) {
                     this.order += 1;
-                    console.log("yeee");
                     this.factory();
                 }
             }
             if (this.factoryBg.visible) {
+                if (this.shutoff == 2) {
+                    this.talky2.talk("Alright Ethan, You are really close to \nJames. There is just one problem... ", "whead", "Will", 0);
+                    this.shutoff = 3;
+                }
+                if (this.game.input.keyboard.isDown(Phaser.Keyboard.O)) {
+                    this.player.x += 10;
+                }
                 if (this.game.input.keyboard.isDown(Phaser.Keyboard.J)) {
                     this.finalRoom();
                 }
@@ -4635,6 +4717,7 @@ var TSAGame;
             this.Obots.removeAll(true);
             this.tbots.removeAll(true);
             this.sensors.removeAll(true);
+            this.cannons.removeAll(true);
         };
         Level3.prototype.finalRoom = function () {
         };

@@ -12,6 +12,7 @@ namespace TSAGame {
         energyBar:EnergyBar;
         map:any;
         Obots:any;
+        shutoff:number;
         shipLayer:any;
         aliens:any;
         cryopod:any;
@@ -54,6 +55,7 @@ namespace TSAGame {
             this.shipLayer = this.map.createLayer("Tile Layer 1");
             this.map.setCollision([1,2,3,4,5,6,7,8,9,10,11,12]);
             this.healthBar = new HealthBar(this.game);
+            this.shutoff=0;
             this.player.layer=this.shipLayer;
             this.elevators=this.game.add.group();
             let elevator = new Elevator(this.game,1632,520,32,this.elevators,-1,"alienElevator");
@@ -61,7 +63,7 @@ namespace TSAGame {
             let elevator3 = new Elevator(this.game,2784,168,360,this.elevators,1,"alienElevator");
             let elevator4 = new Elevator(this.game,4672,160,0,this.elevators,1,"alienElevator");
             let elevator5 = new Elevator(this.game,4064,170,364,this.elevators,1,"alienElevator");
-            let elevator6 = new Elevator(this.game,3744,170,492,this.elevators,-1,"alienElevator");
+            let elevator6 = new Elevator(this.game,3744,492,170,this.elevators,-1,"alienElevator");
             
             this.alarm=this.game.add.group();
             
@@ -82,11 +84,11 @@ namespace TSAGame {
             var alien3=new Alien(this.game,800,480,864,this.shipLayer,this.aliens);
             var alien4=new Alien(this.game,438,64,524,this.shipLayer,this.aliens);
             //var alien5=new Alien(this.game,4192,160,4352,this.shipLayer,this.aliens);
-            var alien6=new Alien(this.game,3860,320,3934,this.shipLayer,this.aliens);
+            var alien6=new Alien(this.game,3770,320,4040,this.shipLayer,this.aliens,[12,15]);
             var alien7=new Alien(this.game,2456,128,2815,this.shipLayer,this.aliens,[3,6]);
             var alien8=new Alien(this.game,2456,320,2815,this.shipLayer,this.aliens,[3,6]);
-            var alien9=new Alien(this.game,2456,128,2815,this.shipLayer,this.aliens,[3,6]);
-            var alien10=new Alien(this.game,2456,320,2815,this.shipLayer,this.aliens,[3,6]);
+            //ar alien9=new Alien(this.game,2456,128,2815,this.shipLayer,this.aliens,[3,6]);
+            //var alien10=new Alien(this.game,2456,320,2815,this.shipLayer,this.aliens,[3,6]);
 
             this.tbots=this.game.add.group();
          //   let tbot=new TBot(this.game,872,384,1024,this.shipLayer,this.tbots,this.player);
@@ -106,10 +108,18 @@ namespace TSAGame {
          //   let sensor6=new Sensor(this.game,4000,64,4288,"",3,this.shipLayer,this.sensors);
                 
             this.cannons=this.game.add.group();
-            var c1=new Cannon(this.game,496,492,2,this.shipLayer,this.cannons);
-            var c2=new Cannon(this.game,1548,207,1,this.shipLayer,this.cannons);
-            var c3=new Cannon(this.game,1620,428,3,this.shipLayer,this.cannons);
-            
+            var c1=new Cannon(this.game,816,332,2,this.shipLayer,this.cannons);
+            var c2=new Cannon(this.game,848,172,2,this.shipLayer,this.cannons);
+            var c3=new Cannon(this.game,1428,130,3,this.shipLayer,this.cannons);
+            var c4=new Cannon(this.game,1428,386,3,this.shipLayer,this.cannons);
+            var c5=new Cannon(this.game,2128,140,2,this.shipLayer,this.cannons);
+            var c6=new Cannon(this.game,2836,130,3,this.shipLayer,this.cannons);
+            var c7=new Cannon(this.game,2444,320,1,this.shipLayer,this.cannons);
+            var c8=new Cannon(this.game,3296,204,2,this.shipLayer,this.cannons);
+            var c9=new Cannon(this.game,2956,244,1,this.shipLayer,this.cannons);
+            var c10=new Cannon(this.game,4480,76,2,this.shipLayer,this.cannons);
+            var c11=new Cannon(this.game,3692,76,2,this.shipLayer,this.cannons);
+
             this.order=0;
             this.level3end = this.game.add.sprite(4640,300,"levelEnd");
             this.game.physics.arcade.enable(this.level3end);
@@ -131,7 +141,7 @@ namespace TSAGame {
             }
             this.talky1=new DialogueBoxCasual(this.game);
             this.talky2=new DialogueBoxUrgent(this.game);
-            this.talky2.talk("Wow this is going to be hard.  ))((","ehead","Ethan",0);
+            this.talky2.talk("Wow this is going to be hard.  ","ehead","Ethan",0);
             this.button1=new Invis(this.game);
             this.button2=new Shield(this.game);
             this.bgMusic=this.game.add.audio("third", 1, true);
@@ -235,7 +245,7 @@ namespace TSAGame {
              }else if(this.order==4){
                     if (this.player.x >= 3680){
                         this.order+=1;
-                        this.talky2.talk("Your destination is very close Ethan! You can do it.","whead","Will",0);
+                        this.talky2.talk("Your destination is very close Ethan! \nYou can do it.","whead","Will",0);
                     }
              }else if(this.order==5){
                     if (this.player.x >= 4544){
@@ -245,11 +255,16 @@ namespace TSAGame {
              }else if(this.order==6){
                     if (this.player.x >= 4600&&this.player.y<60){
                         this.order+=1;
-                        console.log("yeee");
                         this.factory();
                     }
              }if(this.factoryBg.visible){
-                 
+                 if(this.shutoff==2){
+                     this.talky2.talk("Alright Ethan, You are really close to \nJames. There is just one problem... ","whead","Will",0);
+                     this.shutoff=3;
+                 }
+                 if(this.game.input.keyboard.isDown(Phaser.Keyboard.O)){
+                     this.player.x+=10;
+                }
                  if(this.game.input.keyboard.isDown(Phaser.Keyboard.J)){
                     this.finalRoom();
                  }
@@ -344,7 +359,7 @@ namespace TSAGame {
             this.Obots.removeAll(true);
             this.tbots.removeAll(true);
             this.sensors.removeAll(true);
-            
+            this.cannons.removeAll(true);
             
         }finalRoom(){
         }
